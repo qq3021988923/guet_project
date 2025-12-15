@@ -4,7 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="97361c35-86a6-4162-abb0-729d823f8139" name="更改" comment="" />
+    <list default="true" id="97361c35-86a6-4162-abb0-729d823f8139" name="更改" comment="hello world">
+      <change afterPath="$PROJECT_DIR$/guet-consumerr/src/main/java/com/yang/guetconsumerr/security/PasswordConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/guet-consumerr/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/guet-consumerr/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/guet-consumerr/src/main/java/com/yang/guetconsumerr/controller/GuetController.java" beforeDir="false" afterPath="$PROJECT_DIR$/guet-consumerr/src/main/java/com/yang/guetconsumerr/controller/GuetController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/guet-consumerr/src/main/java/com/yang/guetconsumerr/controller/UserRoleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/guet-consumerr/src/main/java/com/yang/guetconsumerr/controller/UserRoleController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/guet-consumerr/src/main/java/com/yang/guetconsumerr/security/JwtAuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/guet-consumerr/src/main/java/com/yang/guetconsumerr/security/JwtAuthenticationFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tool/apache-maven-3.6.3.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tool/guet.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tool/nacos-server-2.1.0.zip" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -18,6 +28,9 @@
         <option value="Class" />
       </list>
     </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/guet-consumerr/src/main/java/com/yang/guetconsumerr/controller/GuetController.java" root0="FORCE_HIGHLIGHTING" />
@@ -41,55 +54,59 @@
   &quot;associatedIndex&quot;: 7
 }</component>
   <component name="ProjectId" id="36byWfbNwrcjkCM8IIpNoGodLX1" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Maven.Guet [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.Guet [install].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.Guet [validate].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.guet-commons [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.guet-commons [install].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.guet-consumer [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.guet-consumer [install].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.guet-consumerr [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.guet-consumerr [install].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.guet-gateway [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.guet-gateway [install].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.guet-provide [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.guet-provide [install].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.guet_nacos [install].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.guet_provide [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.guet_provide [install].executor&quot;: &quot;Run&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;Spring Boot.GuetCommonsApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.GuetConsumerApplication (1).executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.GuetConsumerApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.GuetConsumerrApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.GuetGatewayApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.GuetNacosApplication (1).executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.GuetNacosApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.GuetProvideApplication (1).executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.GuetProvideApplication.executor&quot;: &quot;Run&quot;,
-    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;17&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;E:/电脑 桌面软件/英语过度班/桂林电子科技大学/bishe_project/Guet/guet-provide/src/main/resources/mapper/order&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;run.configurations.included.in.services&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;MavenSettings&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Maven.Guet [clean].executor": "Run",
+    "Maven.Guet [install].executor": "Run",
+    "Maven.Guet [validate].executor": "Run",
+    "Maven.guet-commons [clean].executor": "Run",
+    "Maven.guet-commons [install].executor": "Run",
+    "Maven.guet-consumer [clean].executor": "Run",
+    "Maven.guet-consumer [install].executor": "Run",
+    "Maven.guet-consumerr [clean].executor": "Run",
+    "Maven.guet-consumerr [install].executor": "Run",
+    "Maven.guet-gateway [clean].executor": "Run",
+    "Maven.guet-gateway [install].executor": "Run",
+    "Maven.guet-provide [clean].executor": "Run",
+    "Maven.guet-provide [install].executor": "Run",
+    "Maven.guet_nacos [install].executor": "Run",
+    "Maven.guet_provide [clean].executor": "Run",
+    "Maven.guet_provide [install].executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Spring Boot.GuetCommonsApplication.executor": "Run",
+    "Spring Boot.GuetConsumerApplication (1).executor": "Run",
+    "Spring Boot.GuetConsumerApplication.executor": "Run",
+    "Spring Boot.GuetConsumerrApplication.executor": "Run",
+    "Spring Boot.GuetGatewayApplication.executor": "Run",
+    "Spring Boot.GuetNacosApplication (1).executor": "Run",
+    "Spring Boot.GuetNacosApplication.executor": "Run",
+    "Spring Boot.GuetProvideApplication (1).executor": "Run",
+    "Spring Boot.GuetProvideApplication.executor": "Run",
+    "jdk.selected.JAVA_MODULE": "17",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "E:/电脑 桌面软件/英语过度班/桂林电子科技大学/bishe_project/Guet/guet-provide/src/main/resources/mapper/order",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "run.configurations.included.in.services": "true",
+    "settings.editor.selected.configurable": "MavenSettings",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="ReactorSettings">
     <option name="notificationShown" value="true" />
   </component>
@@ -224,10 +241,34 @@
       <workItem from="1765718021511" duration="26942000" />
       <workItem from="1765758764166" duration="9813000" />
     </task>
+    <task id="LOCAL-00001" summary="hello world">
+      <option name="closed" value="true" />
+      <created>1765830630277</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1765830630277</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="hello world" />
+    <option name="LAST_COMMIT_MESSAGE" value="hello world" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

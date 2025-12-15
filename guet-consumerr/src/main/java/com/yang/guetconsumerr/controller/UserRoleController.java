@@ -18,8 +18,11 @@ public class UserRoleController {
     //网关  http://localhost:8088/consumer/api/urole/deleteByUserId/2
     @GetMapping("/deleteByUserId/{userId}")
     public Result<Integer> deleteByUserId(@PathVariable Long userId) {
-        int i = roleService.deleteByUserId(userId);
-        return Result.build(i,i==0?500:200,"删除操作");
+        if(userId !=null){
+            int i = roleService.deleteByUserId(userId);
+            return Result.build(i,i==0?500:200,"删除操作");
+        }
+        return Result.build(0,500,"删除操作");
     }
 
     //网关  http://localhost:8088/consumer/api/urole/query

@@ -35,19 +35,22 @@ public class GuetController {
     @Autowired
     private GuetRoleService roleService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
 
     // http://localhost:8088/consumer/api/user/save
     @PostMapping("/save")
     public Result<Integer> saveUser(@RequestBody UserDto user){
 
+        if (user.getUser().getId() != null) {
+            userRoleService.deleteByUserId(user.getUser().getId());
+        }
 
         if(user.getRoleIds() !=null){
-
             // 通过当前用户的id删除对应的中间表再重新分配
-            userRoleService.deleteByUserId(user.getUser().getId());
 
             for(Long i:user.getRoleIds()){
-
                 UserRole userRole=new UserRole();
                 userRole.setUserId(user.getUser().getId());
                 userRole.setRoleId(i);
@@ -58,17 +61,16 @@ public class GuetController {
 
         }
 
-
-
         if(user.getUser().getId() != null ){
-
             int i = userService.updateUser(user.getUser());
             return Result.build(i,i==0 ? 500:200,"更新用户记录");
 
         }else{
 
+            user.getUser().setPassword(passwordEncoder.encode(user.getUser().getPassword()));
             int i = userService.insertUser(user.getUser());
             return Result.build(i,i==0 ? 500:200,"添加用户记录");
+
 
         }
     }
@@ -126,7 +128,10 @@ public class GuetController {
     // 访问网关 http://localhost:8088/consumer/api/user/insert
     @PostMapping("/insert")
     public Result<Integer> insertUser(@RequestBody GuetUser user){
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         int i = userService.insertUser(user);
+
         return Result.build(i,i==0 ? 500:200,"添加用户记录");
     }
 
@@ -167,24 +172,22 @@ public class GuetController {
     // http://localhost:8088/consumer/api/user/login
     @PostMapping("/login")
     public Result<Map<String, Object>> verifyLogin(@RequestBody GuetUser user, UserRole urole){
-
         Map<String, Object> response = new HashMap<>();
-        GuetUser users = userService.verifyLogin(user);
+
+        // 根据用户名查询用户
+        GuetUser users = userService.getUserByUsername(user);
 
         if (users == null) {
-            return Result.build(response,401,"用户不存在");
+            return Result.build(response, 401, "用户不存在");
         }
 
-//        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {;
-//            return Result.build(response,401,"密码错误");
-//        }
+        // 验证密码
+        if (!passwordEncoder.matches(user.getPassword(), users.getPassword())) {
+            return Result.build(response, 401, "密码错误");
+        }
 
-//        if (user.getStatus() == 0) {
-//            return Result.build(user,403,"用户已被禁用");;
-//        }
 
         String token = jwtUtil.generateToken(user.getUsername());
-//        response.put("code", 200);
 
         Long uid=users.getId();
         urole.setUserId(uid);
