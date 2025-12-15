@@ -38,40 +38,47 @@ public class GuetController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-
     // http://localhost:8088/consumer/api/user/save
     @PostMapping("/save")
     public Result<Integer> saveUser(@RequestBody UserDto user){
 
-        if (user.getUser().getId() != null) {
-            userRoleService.deleteByUserId(user.getUser().getId());
-        }
-
-        if(user.getRoleIds() !=null){
-            // 通过当前用户的id删除对应的中间表再重新分配
-
-            for(Long i:user.getRoleIds()){
-                UserRole userRole=new UserRole();
-                userRole.setUserId(user.getUser().getId());
-                userRole.setRoleId(i);
-
-                //插入中间表
-                userRoleService.uroleInsert(userRole);
+        if(user.getUser().getId() != null){
+            // 更新用户
+            if(user.getRoleIds() != null){
+                userRoleService.deleteByUserId(user.getUser().getId());
+                for(Long i : user.getRoleIds()){
+                    UserRole userRole = new UserRole();
+                    userRole.setUserId(user.getUser().getId());
+                    userRole.setRoleId(i);
+                    userRoleService.uroleInsert(userRole);
+                }
             }
 
-        }
+            // 如果密码不为空，加密新密码
+            if(user.getUser().getPassword() != null && !user.getUser().getPassword().isEmpty()){
+                user.getUser().setPassword(passwordEncoder.encode(user.getUser().getPassword()));
+            }
 
-        if(user.getUser().getId() != null ){
             int i = userService.updateUser(user.getUser());
-            return Result.build(i,i==0 ? 500:200,"更新用户记录");
+            return Result.build(i, i == 0 ? 500 : 200, "更新用户记录");
 
-        }else{
-
+        } else {
+            // 新增用户 - 加密密码
             user.getUser().setPassword(passwordEncoder.encode(user.getUser().getPassword()));
+
             int i = userService.insertUser(user.getUser());
-            return Result.build(i,i==0 ? 500:200,"添加用户记录");
 
+            // 新增后分配角色
+            if(user.getRoleIds() != null && i > 0){
+                for(Long roleId : user.getRoleIds()){
+                    UserRole userRole = new UserRole();
+                    userRole.setUserId(user.getUser().getId());
+                    userRole.setRoleId(roleId);
+                    userRoleService.uroleInsert(userRole);
+                }
+            }
 
+            return Result.build(i, i == 0 ? 500 : 200, "添加用户记录");
         }
     }
 
@@ -128,10 +135,7 @@ public class GuetController {
     // 访问网关 http://localhost:8088/consumer/api/user/insert
     @PostMapping("/insert")
     public Result<Integer> insertUser(@RequestBody GuetUser user){
-
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         int i = userService.insertUser(user);
-
         return Result.build(i,i==0 ? 500:200,"添加用户记录");
     }
 
@@ -165,62 +169,51 @@ public class GuetController {
     // 访问网关 http://localhost:8088/consumer/api/user/upstatus/16
     @GetMapping("/upstatus/{id}")
     public Result<Integer> updateStatus(@PathVariable  Long id) {
+
         int i = userService.updateStatus(id);
+
         return Result.build(i,i==0 ? 500:200,"启动账号");
     }
 
     // http://localhost:8088/consumer/api/user/login
     @PostMapping("/login")
     public Result<Map<String, Object>> verifyLogin(@RequestBody GuetUser user, UserRole urole){
-        Map<String, Object> response = new HashMap<>();
 
-        // 根据用户名查询用户
+        Map<String, Object> response = new HashMap<>();
         GuetUser users = userService.getUserByUsername(user);
 
         if (users == null) {
             return Result.build(response, 401, "用户不存在");
         }
 
-        // 验证密码
         if (!passwordEncoder.matches(user.getPassword(), users.getPassword())) {
             return Result.build(response, 401, "密码错误");
         }
 
-
         String token = jwtUtil.generateToken(user.getUsername());
-
-        Long uid=users.getId();
+        Long uid = users.getId();
         urole.setUserId(uid);
+        List<UserRole> lists = userRoleService.listUserRoleByCondition(urole);
+        List<String> rname = new ArrayList<>();
 
-        List<UserRole> lists= userRoleService.listUserRoleByCondition(urole);
-
-        List<String> rname=new ArrayList<>();
-        if(lists !=null && !lists.isEmpty()){
+        if(lists != null && !lists.isEmpty()){
             System.out.println("当前用户在中间表的数据" + lists);
-
-            List<Long> rids=new ArrayList<>();
-            // 提取中间表roleid的所有字段
-
+            List<Long> rids = new ArrayList<>();
             for (int i = 0; i < lists.size(); i++) {
-
                 Long rid = lists.get(i).getRoleId();
                 rids.add(rid);
             }
 
-            System.out.println("我是角色表的ids"+rids);
+            System.out.println("我是角色表的ids" + rids);
             System.out.println("--------------------------------------------------------------");
             List<GuetRole> guetRoles = roleService.selectListIds(rids);
 
-
-
             for (int i = 0; i < guetRoles.size(); i++) {
-
                 rname.add(guetRoles.get(i).getRoleName());
             }
 
-            System.out.println("当前用户所具有的职位"+rname);
+            System.out.println("当前用户所具有的职位" + rname);
             response.put("permission", rname);
-
         }
 
         if (lists != null && lists.isEmpty()) {
@@ -230,9 +223,7 @@ public class GuetController {
         response.put("token", token);
         response.put("user", users);
 
-//        GuetUser users = userService.verifyLogin(user);
-
-        //return Result.build(users,users==null ? 500:200,"登录");
-        return Result.build(response,200,"登录成功");
+        return Result.build(response, 200, "登录成功");
     }
+
 }
