@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yang.mapper.BasicDataMapper">
+
+    <resultMap id="basicMap" type="com.yang.pojo.GuetBasicData" autoMapping="true">
+
+    </resultMap>
+
+    <sql id="columns">
+        base_id,parent_id,base_name,base_desc
+    </sql>
+
+    <select id="queryAll" resultMap="basicMap">
+        select
+            <include refid="columns"/>
+        from
+            basicdata
+    </select>
+
+
+    <select id="selectById" resultMap="basicMap">
+        select <include refid="columns"/> from basicdata where base_id = #{baseId}
+    </select>
+
+    <select id="selectByName" resultMap="basicMap">
+        select <include refid="columns"/> from basicdata where base_name = #{baseName}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="baseId">
+        insert into basicdata (parent_id, base_name, base_desc)
+        values (
+        <choose>
+            <when test="parentId != null and parentId != 0">#{parentId}</when>
+            <otherwise>null</otherwise>
+        </choose>,
+        #{baseName}, #{baseDesc}
+        )
+    </insert>
+
+    <update id="update">
+        update basicdata
+        <set>
+            <if test="baseName != null">base_name = #{baseName},</if>
+            <if test="baseDesc != null">base_desc = #{baseDesc},</if>
+        </set>
+        where base_id = #{baseId}
+    </update>
+
+    <delete id="deleteById">
+        delete from basicdata where base_id = #{baseId}
+    </delete>
+
+</mapper>

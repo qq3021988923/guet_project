@@ -1,0 +1,19 @@
+server:
+  port: 9999
+
+spring:
+  application:
+    name: guet-consumerr
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: dev
+        group: dev
+
+jwt:
+  secret: guet_springboot_secret_key_2024_very_long_string_for_security_and_this_is_a_very_long_secret_key_for_hs512_algorithm_security_requirement
+  expiration: 86400000
+
+
