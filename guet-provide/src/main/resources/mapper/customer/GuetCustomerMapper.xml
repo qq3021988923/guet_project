@@ -20,6 +20,16 @@
         customer_address,customer_sex,description
         </sql>
 
+    <select id="selectByUserId" resultMap="CustomerMap">
+        select <include refid="columns"/>
+        from guet_customer
+        <where>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+        </where>
+    </select>
+
     <select id="selectAll" resultMap="CustomerMap">
         SELECT
             <include refid="columns"/>

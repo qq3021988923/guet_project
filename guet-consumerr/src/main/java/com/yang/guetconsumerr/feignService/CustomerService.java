@@ -2,16 +2,15 @@ package com.yang.guetconsumerr.feignService;
 
 import com.yang.pojo.Customer;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @FeignClient(name = "guet-provide",contextId = "customerFeign")
 public interface CustomerService {
 
+    @GetMapping("/customer/sbyuserid")
+    public List<Customer> selectByUserId(@RequestParam(required = false) Long userId);
 
     // http://localhost:8888/customer/list
     @GetMapping("/customer/list")

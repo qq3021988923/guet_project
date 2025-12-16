@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 80028
 File Encoding         : 65001
 
-Date: 2025-12-16 04:10:11
+Date: 2025-12-17 04:58:27
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -27,7 +27,7 @@ CREATE TABLE `basicdata` (
   PRIMARY KEY (`base_id`),
   KEY `FK_sub_basic` (`parent_id`),
   CONSTRAINT `FK_sub_basic` FOREIGN KEY (`parent_id`) REFERENCES `basicdata` (`base_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=67 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=70 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of basicdata
@@ -55,10 +55,12 @@ INSERT INTO `basicdata` VALUES ('22', '21', '斤', '斤');
 INSERT INTO `basicdata` VALUES ('23', '21', '公斤', '公斤');
 INSERT INTO `basicdata` VALUES ('24', '21', '件', '件');
 INSERT INTO `basicdata` VALUES ('25', '21', '个', '个');
-INSERT INTO `basicdata` VALUES ('36', null, '测试', '测试');
+INSERT INTO `basicdata` VALUES ('36', null, '测试1', '测试');
 INSERT INTO `basicdata` VALUES ('43', '36', '11', '11');
 INSERT INTO `basicdata` VALUES ('44', '36', '22', '22');
 INSERT INTO `basicdata` VALUES ('45', '36', '33', '33');
+INSERT INTO `basicdata` VALUES ('68', '1', '北京', '北京');
+INSERT INTO `basicdata` VALUES ('69', '21', '台', '台');
 
 -- ----------------------------
 -- Table structure for `brand`
@@ -97,18 +99,18 @@ CREATE TABLE `guet_customer` (
   `customer_sex` varchar(1) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`customer_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of guet_customer
 -- ----------------------------
-INSERT INTO `guet_customer` VALUES ('1', null, null, '计算机', null, null, null, null, null);
-INSERT INTO `guet_customer` VALUES ('2', '2', '33', '小明', '324234', '3423423', '上海', '6', '666');
-INSERT INTO `guet_customer` VALUES ('4', null, null, '计算机', null, null, null, null, null);
-INSERT INTO `guet_customer` VALUES ('5', null, null, '黑马', null, null, null, null, null);
-INSERT INTO `guet_customer` VALUES ('7', null, null, '张无忌', null, null, null, null, null);
+INSERT INTO `guet_customer` VALUES ('1', '12', null, '王总', null, null, null, null, null);
+INSERT INTO `guet_customer` VALUES ('2', '1', '33', '小明', '324234', '3423423', '上海', '6', '666');
+INSERT INTO `guet_customer` VALUES ('5', '12', null, '马化腾', null, null, null, null, null);
+INSERT INTO `guet_customer` VALUES ('7', '12', null, '小张', null, null, null, null, null);
 INSERT INTO `guet_customer` VALUES ('8', null, null, '张无忌123', null, null, null, null, null);
-INSERT INTO `guet_customer` VALUES ('9', '2', '3', '张无忌111', '333', '3333', '333', '3', '33');
+INSERT INTO `guet_customer` VALUES ('9', '1', '3', '张无忌111', '333', '3333', '333', '3', '33');
+INSERT INTO `guet_customer` VALUES ('15', '5', null, '杨', '18776423429', '3021988923@qq.com', '广西水利电力职业技术学院（长堽校区）', '男', 'hello');
 
 -- ----------------------------
 -- Table structure for `guet_order`
@@ -132,14 +134,18 @@ CREATE TABLE `guet_order` (
   `description` varchar(255) DEFAULT NULL,
   `order_phone` varchar(255) DEFAULT NULL,
   `order_person` varchar(255) DEFAULT NULL,
+  `order_pickup` varchar(30) DEFAULT NULL,
+  `order_unit` varchar(20) DEFAULT NULL,
+  `order_brand` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   PRIMARY KEY (`order_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of guet_order
 -- ----------------------------
-INSERT INTO `guet_order` VALUES ('1', '35', '11', '11', '11', '11', '111', '22', '2', '22', '2025-12-15 05:18:39', '22', '222', '22', '222', '22', '222');
-INSERT INTO `guet_order` VALUES ('3', null, null, null, 'hello', null, null, null, null, null, '2025-12-15 05:37:33', null, null, null, null, null, null);
+INSERT INTO `guet_order` VALUES ('8', '1', '1', 'td5913698346', '手串', '50', '9', '495', '1', '广西水利电力职业技术学院（长堽校区）', '2025-12-17 04:23:09', '全款', '海运', '大连', '没有bug', '18776423429', '王天罡', '上门取件', '个', '百年老树');
+INSERT INTO `guet_order` VALUES ('10', '1', '1', 'td5914135042', '电脑', '5', '5000', '25000', '1', '广西区桂林市金鸡路1号', '2025-12-17 03:42:15', '预付定金', '空运', '大连', '不要报错', '18776423429', '自己人', '自动配送', '斤', '苹果');
+INSERT INTO `guet_order` VALUES ('11', '5', '15', 'td5916659401', '电脑', '5', '5000', '25000', '1', '广西区桂林市金鸡路1号', '2025-12-17 04:24:19', '全款', '海运', '大连', '不要报错', '18776423429', '自己人', '上门取件', '斤', '苹果');
 
 -- ----------------------------
 -- Table structure for `guet_role`
@@ -184,22 +190,22 @@ CREATE TABLE `guet_user` (
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `sex` varchar(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户表';
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户表';
 
 -- ----------------------------
 -- Records of guet_user
 -- ----------------------------
-INSERT INTO `guet_user` VALUES ('1', 'admin', '123456', '隔壁老王1', '15011113652', 'https://oss.aliyuncs.com/aliyun_id_photo_bucket/default_handsome.jpg', '管理员账号', '1', '2025-08-01 10:17:18', '2025-12-15 11:16:49', '男');
-INSERT INTO `guet_user` VALUES ('5', 'zhangsan', '123456', '张三33', '13589658968', 'https://oss.aliyuncs.com/aliyun_id_photo_bucket/default_handsome.jpg', '', '0', '2025-08-01 10:17:18', '2025-12-15 10:48:02', '男');
-INSERT INTO `guet_user` VALUES ('6', 'test1212', '123456', 'test12', '15011245632', 'https://oss.aliyuncs.com/aliyun_id_photo_bucket/default_handsome.jpg', 'test12', '0', '2025-08-01 10:17:18', '2025-12-15 03:27:59', '男');
-INSERT INTO `guet_user` VALUES ('12', 'lucy1', '123456', '1', '1', 'https://oss.aliyuncs.com/aliyun_id_photo_bucket/default_handsome.jpg', '1', '1', '2025-08-01 10:17:18', '2025-12-15 10:45:28', '男');
-INSERT INTO `guet_user` VALUES ('13', 'hello', '123456', 'hello', '12343423423', 'https://oss.aliyuncs.com/aliyun_id_photo_bucket/default_handsome.jpg', 'hello', '1', '2025-08-01 10:17:18', '2025-12-15 10:45:51', '女');
-INSERT INTO `guet_user` VALUES ('14', 'hello', '123456', '111', '444', '444', '77', '1', '2025-12-12 04:03:33', '2025-12-15 10:49:13', '');
-INSERT INTO `guet_user` VALUES ('16', 'hello1', '123456', '222', '55', '33', '88', '1', '2025-12-12 04:18:44', '2025-12-15 10:45:12', '');
-INSERT INTO `guet_user` VALUES ('17', 'hello1', '123456', '33', '66', '222', '99', '1', '2025-12-12 04:18:45', '2025-12-13 01:47:36', null);
-INSERT INTO `guet_user` VALUES ('26', 'hello123', '123456', 'demo001', '', null, '', '0', '2025-12-12 22:57:17', '2025-12-15 06:53:37', '');
-INSERT INTO `guet_user` VALUES ('29', '广西234', '123456', '小明111', '', null, '', '1', '2025-12-15 09:23:56', '2025-12-15 09:24:12', '');
-INSERT INTO `guet_user` VALUES ('30', '北京', '123456', '小明111', '', null, '', '1', '2025-12-15 09:24:27', '2025-12-15 11:16:31', '');
+INSERT INTO `guet_user` VALUES ('1', 'admin', '$2a$10$aaYV4UAtwpwXbI8nnudeGuruueF4ZIlqsK5NkHEfdt2nO64yEClcS', '隔壁老王1', '15011113652', 'https://oss.aliyuncs.com/aliyun_id_photo_bucket/default_handsome.jpg', '管理员账号', '1', '2025-08-01 10:17:18', '2025-12-16 07:43:48', '男');
+INSERT INTO `guet_user` VALUES ('5', 'zhangsan', '$2a$10$EBAjGQz4zfn8SiX1WF4G6upRfWOqJ8w9xIEpTpYPO//SmM4pWiagy', '张三33', '13589658968', 'https://oss.aliyuncs.com/aliyun_id_photo_bucket/default_handsome.jpg', '', '1', '2025-08-01 10:17:18', '2025-12-16 09:14:15', '男');
+INSERT INTO `guet_user` VALUES ('6', 'test1212', '$2a$10$EBAjGQz4zfn8SiX1WF4G6upRfWOqJ8w9xIEpTpYPO//SmM4pWiagy', 'test12', '15011245632', 'https://oss.aliyuncs.com/aliyun_id_photo_bucket/default_handsome.jpg', 'test12', '0', '2025-08-01 10:17:18', '2025-12-16 07:42:57', '男');
+INSERT INTO `guet_user` VALUES ('12', 'lucy1', '$2a$10$EBAjGQz4zfn8SiX1WF4G6upRfWOqJ8w9xIEpTpYPO//SmM4pWiagy', '1', '1', 'https://oss.aliyuncs.com/aliyun_id_photo_bucket/default_handsome.jpg', '1', '1', '2025-08-01 10:17:18', '2025-12-16 07:42:57', '男');
+INSERT INTO `guet_user` VALUES ('13', 'hello', '$2a$10$EBAjGQz4zfn8SiX1WF4G6upRfWOqJ8w9xIEpTpYPO//SmM4pWiagy', 'hello', '12343423423', 'https://oss.aliyuncs.com/aliyun_id_photo_bucket/default_handsome.jpg', 'hello', '1', '2025-08-01 10:17:18', '2025-12-16 07:42:57', '女');
+INSERT INTO `guet_user` VALUES ('14', 'hello', '$2a$10$EBAjGQz4zfn8SiX1WF4G6upRfWOqJ8w9xIEpTpYPO//SmM4pWiagy', '111', '444', '444', '77', '1', '2025-12-12 04:03:33', '2025-12-16 07:42:57', '');
+INSERT INTO `guet_user` VALUES ('16', 'hello1', '$2a$10$EBAjGQz4zfn8SiX1WF4G6upRfWOqJ8w9xIEpTpYPO//SmM4pWiagy', '222', '55', '33', '88', '1', '2025-12-12 04:18:44', '2025-12-16 07:42:57', '');
+INSERT INTO `guet_user` VALUES ('17', 'hello1', '$2a$10$EBAjGQz4zfn8SiX1WF4G6upRfWOqJ8w9xIEpTpYPO//SmM4pWiagy', '33', '66', '222', '99', '1', '2025-12-12 04:18:45', '2025-12-16 07:42:57', null);
+INSERT INTO `guet_user` VALUES ('26', 'hello123', '$2a$10$EBAjGQz4zfn8SiX1WF4G6upRfWOqJ8w9xIEpTpYPO//SmM4pWiagy', 'demo001', '', null, '', '0', '2025-12-12 22:57:17', '2025-12-16 07:42:57', '');
+INSERT INTO `guet_user` VALUES ('29', '广西234', '$2a$10$EBAjGQz4zfn8SiX1WF4G6upRfWOqJ8w9xIEpTpYPO//SmM4pWiagy', '小明111', '', null, '', '1', '2025-12-15 09:23:56', '2025-12-16 07:42:57', '');
+INSERT INTO `guet_user` VALUES ('30', '北京', '$2a$10$EBAjGQz4zfn8SiX1WF4G6upRfWOqJ8w9xIEpTpYPO//SmM4pWiagy', '小明111', '', null, '', '1', '2025-12-15 09:24:27', '2025-12-16 07:42:57', '');
 
 -- ----------------------------
 -- Table structure for `guet_user_role`
@@ -212,7 +218,7 @@ CREATE TABLE `guet_user_role` (
   PRIMARY KEY (`id`),
   KEY `idx_role_id` (`role_id`),
   KEY `idx_admin_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb3 COMMENT='用户角色';
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb3 COMMENT='用户角色';
 
 -- ----------------------------
 -- Records of guet_user_role
@@ -221,4 +227,6 @@ INSERT INTO `guet_user_role` VALUES ('18', '45', '5');
 INSERT INTO `guet_user_role` VALUES ('26', '45', '30');
 INSERT INTO `guet_user_role` VALUES ('27', '10', '30');
 INSERT INTO `guet_user_role` VALUES ('28', '38', '30');
-INSERT INTO `guet_user_role` VALUES ('29', '9', '1');
+INSERT INTO `guet_user_role` VALUES ('43', '10', '1');
+INSERT INTO `guet_user_role` VALUES ('44', '36', '1');
+INSERT INTO `guet_user_role` VALUES ('45', '9', '1');

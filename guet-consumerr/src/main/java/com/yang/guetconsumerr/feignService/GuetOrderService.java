@@ -2,15 +2,14 @@ package com.yang.guetconsumerr.feignService;
 
 import com.yang.pojo.GuetOrder;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @FeignClient(name = "guet-provide",contextId = "orderFeign")
 public interface GuetOrderService {
+
+
 
 
     @GetMapping("/order/list")
@@ -22,8 +21,8 @@ public interface GuetOrderService {
     @PostMapping("/order/query")
     List<GuetOrder> query(@RequestBody GuetOrder order);
 
-    @GetMapping("/order/user/{userId}")
-    List<GuetOrder> getByUserId(@PathVariable("userId") Long userId);
+    @GetMapping("/order/user")
+    List<GuetOrder> getByUserId(@RequestParam(required = false) Long userId);
 
     @PostMapping("/order/insert")
     int insert(@RequestBody GuetOrder order);

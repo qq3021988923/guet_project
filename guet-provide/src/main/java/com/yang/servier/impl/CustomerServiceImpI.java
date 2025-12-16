@@ -16,6 +16,11 @@ public class CustomerServiceImpI implements ICustomerService {
     private CustomerMapper customerMapper;
 
     @Override
+    public List<Customer> selectByUserId(Long userId) {
+        return customerMapper.selectByUserId(userId);
+    }
+
+    @Override
     public List<Customer> selectAll() {
         return customerMapper.selectAll();
     }

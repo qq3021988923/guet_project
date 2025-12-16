@@ -8,6 +8,8 @@ import java.util.List;
 @Mapper
 public interface CustomerMapper {
 
+    List<Customer> selectByUserId(Long userId);
+
     List<Customer> selectAll();
 
     List<Customer> selectByName(Customer customer);

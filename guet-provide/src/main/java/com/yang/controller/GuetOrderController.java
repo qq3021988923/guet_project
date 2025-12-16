@@ -33,12 +33,15 @@ public class GuetOrderController {
     // 条件查询
     @PostMapping("/query")
     public List<GuetOrder> query(@RequestBody GuetOrder order) {
+
+
+
         return iGuetOrderService.selectByCondition(order);
     }
 
     // 根据用户ID查询
-    @GetMapping("/user/{userId}")
-    public List<GuetOrder> getByUserId(@PathVariable Long userId) {
+    @GetMapping("/user")
+    public List<GuetOrder> getByUserId(@RequestParam(required = false) Long userId) {
         return iGuetOrderService.selectByUserId(userId);
     }
 

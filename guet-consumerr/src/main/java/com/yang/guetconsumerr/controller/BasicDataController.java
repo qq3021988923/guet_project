@@ -21,38 +21,12 @@ public class BasicDataController {
     private GuetUserService guetUserService;
 
 
+
+
+
     // http://localhost:8088/consumer/api/basic/byParentId/2
     @GetMapping("/byParentId/{parentId}")
     public Result<List<GuetBasicData>> getbyParentId(@PathVariable Integer parentId) {
-
-
-        HashMap<String,Object> mp=new HashMap<>();
-        List<GuetBasicData> intervalList = basicDataService.getByName("常用区间");
-        List<GuetBasicData> shippingList = basicDataService.getByName("运货方式");
-        List<GuetBasicData> paymentList = basicDataService.getByName("付款方式");
-        List<GuetBasicData> pickupList = basicDataService.getByName("取货方式");
-        List<GuetBasicData> unitList = basicDataService.getByName("单位");
-
-        if(intervalList !=null){
-            List<GuetBasicData> interval = basicDataService.getbyParentId(intervalList.get(0).getBaseId());
-            mp.put("interval",interval);
-        }
-        if(shippingList !=null){
-            List<GuetBasicData> shipping = basicDataService.getbyParentId(shippingList.get(0).getBaseId());
-            mp.put("shipping",shipping);
-        }
-        if(paymentList !=null){
-            List<GuetBasicData> payment = basicDataService.getbyParentId(paymentList.get(0).getBaseId());
-            mp.put("payment",payment);
-        }
-        if(pickupList !=null){
-            List<GuetBasicData> pickup = basicDataService.getbyParentId(pickupList.get(0).getBaseId());
-            mp.put("pickup",pickup);
-        }
-        if(unitList !=null){
-            List<GuetBasicData> unit = basicDataService.getbyParentId(unitList.get(0).getBaseId());
-            mp.put("unit",unit);
-        }
 
 
 

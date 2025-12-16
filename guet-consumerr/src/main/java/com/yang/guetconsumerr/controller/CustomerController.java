@@ -15,6 +15,15 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
+    // http://localhost:8088/consumer/api/cust/sbyuserid
+    @GetMapping("/sbyuserid")
+    public Result<List<Customer>> selectByUserId(@RequestParam(required = false) Long userId) {
+        System.out.println("用户id"+userId);
+        List<Customer> customers = customerService.selectByUserId(userId);
+        System.out.println(customers);
+        return Result.build(customers,customers==null?500:200,"当前用户的客户");
+    }
+
     // http://localhost:8088/consumer/api/cust/list
     @GetMapping("/list")
     public Result<List<Customer>> selectAll() {

@@ -1,10 +1,12 @@
 package com.yang.guetconsumerr.controller;
 
 import com.yang.dto.UserDto;
+import com.yang.guetconsumerr.feignService.CustomerService;
 import com.yang.guetconsumerr.feignService.GuetRoleService;
 import com.yang.guetconsumerr.feignService.GuetUserService;
 import com.yang.guetconsumerr.feignService.UserRoleService;
 import com.yang.guetconsumerr.security.JwtUtil;
+import com.yang.pojo.Customer;
 import com.yang.pojo.GuetRole;
 import com.yang.pojo.GuetUser;
 import com.yang.pojo.UserRole;
@@ -37,6 +39,11 @@ public class GuetController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private CustomerService customerService;
+
+
 
     // http://localhost:8088/consumer/api/user/save
     @PostMapping("/save")
@@ -147,10 +154,6 @@ public class GuetController {
     }
 
 
-
-
-
-
     // 访问网关 http://localhost:8088/consumer/api/user/delete/1
     @GetMapping("/delete/{id}")
     public Result<Integer> deleteUserById(@PathVariable  Long id) {
@@ -162,6 +165,14 @@ public class GuetController {
     // 访问网关 http://localhost:8088/consumer/api/user/pydelete
     @GetMapping("/pydelete/{id}")
     public Result<Integer> deleteUserPhysicallyById(@PathVariable  Long id) {
+
+        List<Customer> customers = customerService.selectByUserId(id);
+        System.out.println("当前用户的客户");
+        System.out.println(customers);
+        if(customers !=null && !customers.isEmpty()){
+            return Result.build(0, 500,"删除失败，当前用户有客户");
+        }
+
         int i = userService.deleteUserPhysicallyById(id);
         return Result.build(i,i==0 ? 500:200,"删除用户记录");
     }

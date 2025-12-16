@@ -21,12 +21,16 @@
         <result property="desc" column="description"/>
         <result property="phone" column="order_phone"/>
         <result property="person" column="order_person"/>
+        <result property="pickup" column="order_pickup"/>
+        <result property="unit" column="order_unit"/>
+        <result property="brand" column="order_brand"/>
     </resultMap>
 
     <sql id="columns">
         order_id, user_id, customer_id, order_num, order_name, order_number,
     order_price, order_total, order_status, order_address, create_time,
-    order_payment, order_shipping, order_citi, description, order_phone, order_person
+    order_payment, order_shipping, order_citi, description, order_phone, order_person,
+    order_pickup, order_unit ,order_brand
     </sql>
 
     <!-- 查询所有订单 -->
@@ -58,23 +62,33 @@
         </where>
     </select>
 
-    <!-- 根据用户ID查询订单 -->
+    <!-- 根据用户ID查询订单（动态） -->
     <select id="selectByUserId" resultMap="OrderMap">
-        select <include refid="columns"/> from guet_order where user_id = #{userId}
+        select <include refid="columns"/> from guet_order
+        <where>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+        </where>
     </select>
+
 
     <!-- 新增订单 -->
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         insert into guet_order (
             user_id, customer_id, order_num, order_name, order_number,
             order_price, order_total, order_status, order_address, create_time,
-            order_payment, order_shipping, order_citi, description, order_phone, order_person
+            order_payment, order_shipping, order_citi, description, order_phone, order_person,
+            order_pickup, order_unit, order_brand
         ) values (
                      #{userId}, #{customerId}, #{num}, #{name}, #{number},
-                     #{price}, #{total}, #{status}, #{address}, #{createTime},
-                     #{payment}, #{shipping}, #{citi}, #{desc}, #{phone}, #{person}
+                     #{price}, #{total}, #{status}, #{address}, now(),
+                     #{payment}, #{shipping}, #{citi}, #{desc}, #{phone}, #{person},
+                     #{pickup}, #{unit}, #{brand}
                  )
     </insert>
+
+
 
     <!-- 更新订单 -->
     <update id="update">
@@ -95,6 +109,9 @@
             <if test="desc != null">description = #{desc},</if>
             <if test="phone != null">order_phone = #{phone},</if>
             <if test="person != null">order_person = #{person},</if>
+            <if test="pickup != null">order_pickup = #{pickup},</if>
+            <if test="unit != null">order_unit = #{unit},</if>
+            <if test="brand != null">order_brand = #{brand},</if>
         </set>
         where order_id = #{id}
     </update>
@@ -103,6 +120,5 @@
     <delete id="deleteById">
         delete from guet_order where order_id = #{id}
     </delete>
-
 
 </mapper>

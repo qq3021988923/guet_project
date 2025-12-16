@@ -14,6 +14,12 @@ public class CustomerController {
     @Autowired
     private ICustomerService Service;
 
+    // http://localhost:8888/customer/sbyuserid
+    @GetMapping("/sbyuserid")
+    public List<Customer> selectByUserId(@RequestParam(required = false)  Long userId) {
+        return Service.selectByUserId(userId);
+    }
+
     // http://localhost:8888/customer/list
     @GetMapping("/list")
     public List<Customer> selectAll() {

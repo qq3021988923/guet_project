@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface ICustomerService {
 
+    List<Customer> selectByUserId(Long userId);
+
     List<Customer> selectAll();
 
     List<Customer> selectByName(Customer customer);
