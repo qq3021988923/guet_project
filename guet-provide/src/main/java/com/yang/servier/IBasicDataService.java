@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface IBasicDataService {
 
+    List<GuetBasicData>selectByParentId(Integer parentId);
+
     List<GuetBasicData> queryAll();
 
     GuetBasicData selectById(Integer baseId);

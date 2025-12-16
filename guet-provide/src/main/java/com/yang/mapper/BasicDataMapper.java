@@ -8,6 +8,8 @@ import java.util.List;
 @Mapper
 public interface BasicDataMapper {
 
+    List<GuetBasicData>selectByParentId(Integer parentId);
+
     List<GuetBasicData> queryAll();
 
     GuetBasicData selectById(Integer baseId);

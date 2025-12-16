@@ -21,14 +21,20 @@ public class BasicDataController {
         return basicDataService.queryAll();
     }
 
+    // http://localhost:8888/basic/byParentId/1
+    @GetMapping("/byParentId/{parentId}")
+    public List<GuetBasicData> getbyParentId(@PathVariable Integer parentId) {
+        return basicDataService.selectByParentId(parentId);
+    }
+
     @GetMapping("/{baseId}")
     public GuetBasicData getById(@PathVariable Integer baseId) {
         return basicDataService.selectById(baseId);
     }
 
-    @PostMapping("/query")
-    public List<GuetBasicData> getByName(@RequestBody GuetBasicData data) {
-        return basicDataService.selectByName(data.getBaseName());
+    @GetMapping("/query")
+    public List<GuetBasicData> getByName(@RequestParam("baseName") String baseName) {
+        return basicDataService.selectByName(baseName);
     }
 
     @PostMapping("/insert")
@@ -45,5 +51,7 @@ public class BasicDataController {
     public int delete(@PathVariable Integer baseId) {
         return basicDataService.deleteById(baseId);
     }
+
+
 
 }

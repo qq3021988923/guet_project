@@ -23,6 +23,13 @@
         select <include refid="columns"/> from basicdata where base_id = #{baseId}
     </select>
 
+    <select id="selectByParentId" resultMap="basicMap">
+        select <include refid="columns"/>
+            from basicdata
+        where parent_id = #{parentId}
+
+    </select>
+
     <select id="selectByName" resultMap="basicMap">
         select <include refid="columns"/> from basicdata where base_name = #{baseName}
     </select>

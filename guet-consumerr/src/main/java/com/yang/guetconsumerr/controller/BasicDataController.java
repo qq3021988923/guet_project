@@ -1,11 +1,13 @@
 package com.yang.guetconsumerr.controller;
 
 import com.yang.guetconsumerr.feignService.BasicDataService;
+import com.yang.guetconsumerr.feignService.GuetUserService;
 import com.yang.pojo.GuetBasicData;
 import com.yang.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -14,6 +16,60 @@ public class BasicDataController {
 
     @Autowired
     private BasicDataService basicDataService;
+
+    @Autowired
+    private GuetUserService guetUserService;
+
+
+    // http://localhost:8088/consumer/api/basic/byParentId/2
+    @GetMapping("/byParentId/{parentId}")
+    public Result<List<GuetBasicData>> getbyParentId(@PathVariable Integer parentId) {
+
+
+        HashMap<String,Object> mp=new HashMap<>();
+        List<GuetBasicData> intervalList = basicDataService.getByName("常用区间");
+        List<GuetBasicData> shippingList = basicDataService.getByName("运货方式");
+        List<GuetBasicData> paymentList = basicDataService.getByName("付款方式");
+        List<GuetBasicData> pickupList = basicDataService.getByName("取货方式");
+        List<GuetBasicData> unitList = basicDataService.getByName("单位");
+
+        if(intervalList !=null){
+            List<GuetBasicData> interval = basicDataService.getbyParentId(intervalList.get(0).getBaseId());
+            mp.put("interval",interval);
+        }
+        if(shippingList !=null){
+            List<GuetBasicData> shipping = basicDataService.getbyParentId(shippingList.get(0).getBaseId());
+            mp.put("shipping",shipping);
+        }
+        if(paymentList !=null){
+            List<GuetBasicData> payment = basicDataService.getbyParentId(paymentList.get(0).getBaseId());
+            mp.put("payment",payment);
+        }
+        if(pickupList !=null){
+            List<GuetBasicData> pickup = basicDataService.getbyParentId(pickupList.get(0).getBaseId());
+            mp.put("pickup",pickup);
+        }
+        if(unitList !=null){
+            List<GuetBasicData> unit = basicDataService.getbyParentId(unitList.get(0).getBaseId());
+            mp.put("unit",unit);
+        }
+
+
+
+        List<GuetBasicData> guetBasicData = basicDataService.getbyParentId(parentId);
+        return Result.build(guetBasicData,guetBasicData == null?500:200,"查询子类列表");
+
+    }
+
+    // http://localhost:8088/consumer/api/basic/data
+//    @GetMapping("/data")
+//    public HashMap<String,Object> getBasicData() {
+//
+//
+//        return null;
+//
+//    }
+
 
     // http://localhost:8088/consumer/api/basic/list
     @GetMapping("/list")
@@ -30,9 +86,9 @@ public class BasicDataController {
     }
 
     // 根据name查询
-    @PostMapping("/query")
-    public Result<List<GuetBasicData>> getByName(@RequestBody GuetBasicData data) {
-        List<GuetBasicData> list = basicDataService.getByName(data);
+    @GetMapping("/query")
+    public Result<List<GuetBasicData>> getByName(String baseName) {
+        List<GuetBasicData> list = basicDataService.getByName(baseName);
         return Result.build(list, 200, "查询成功");
     }
 

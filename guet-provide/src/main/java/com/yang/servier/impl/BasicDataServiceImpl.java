@@ -15,6 +15,11 @@ public class BasicDataServiceImpl implements IBasicDataService {
     private BasicDataMapper basicDataMapper;
 
     @Override
+    public List<GuetBasicData> selectByParentId(Integer parentId) {
+        return basicDataMapper.selectByParentId(parentId);
+    }
+
+    @Override
     public List<GuetBasicData> queryAll() {
         return basicDataMapper.queryAll();
     }

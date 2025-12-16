@@ -2,16 +2,15 @@ package com.yang.guetconsumerr.feignService;
 
 import com.yang.pojo.GuetBasicData;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @FeignClient(name = "guet-provide",contextId = "basicFeign")
 public interface BasicDataService {
 
+    @GetMapping("/basic/byParentId/{parentId}")
+    public List<GuetBasicData> getbyParentId(@PathVariable Integer parentId);
 
     @GetMapping("/basic/list")
     public List<GuetBasicData> getBasicQuery();
@@ -19,8 +18,8 @@ public interface BasicDataService {
     @GetMapping("/basic/{baseId}")
     GuetBasicData getById(@PathVariable("baseId") Integer baseId);
 
-    @PostMapping("/basic/query")
-    List<GuetBasicData> getByName(@RequestBody GuetBasicData data);
+    @GetMapping("/basic/query")
+    List<GuetBasicData> getByName(@RequestParam("baseName") String baseName);
 
     @PostMapping("/basic/insert")
     int insert(@RequestBody GuetBasicData data);
