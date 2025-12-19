@@ -16,4 +16,10 @@ jwt:
   secret: guet_springboot_secret_key_2024_very_long_string_for_security_and_this_is_a_very_long_secret_key_for_hs512_algorithm_security_requirement
   expiration: 86400000
 
+# DeepSeek AI 配置
+ai:
+  deepseek:
+    api-key: sk-c7a71acf83b1489482e26804b89faf98
+    api-url: https://api.deepseek.com/chat/completions
+
 
