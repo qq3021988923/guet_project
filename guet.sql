@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 80028
 File Encoding         : 65001
 
-Date: 2025-12-17 04:58:27
+Date: 2025-12-20 04:05:41
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -99,7 +99,7 @@ CREATE TABLE `guet_customer` (
   `customer_sex` varchar(1) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`customer_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of guet_customer
@@ -109,8 +109,75 @@ INSERT INTO `guet_customer` VALUES ('2', '1', '33', '小明', '324234', '3423423
 INSERT INTO `guet_customer` VALUES ('5', '12', null, '马化腾', null, null, null, null, null);
 INSERT INTO `guet_customer` VALUES ('7', '12', null, '小张', null, null, null, null, null);
 INSERT INTO `guet_customer` VALUES ('8', null, null, '张无忌123', null, null, null, null, null);
-INSERT INTO `guet_customer` VALUES ('9', '1', '3', '张无忌111', '333', '3333', '333', '3', '33');
 INSERT INTO `guet_customer` VALUES ('15', '5', null, '杨', '18776423429', '3021988923@qq.com', '广西水利电力职业技术学院（长堽校区）', '男', 'hello');
+INSERT INTO `guet_customer` VALUES ('16', '1', null, '杨某', '18776423429', '3021988923@qq.com', '广西水利电力职业技术学院（长堽校区）', '男', null);
+INSERT INTO `guet_customer` VALUES ('17', '1', null, '张三', '18776423429', '3021988923@qq.com', '广西水利电力职业技术学院（长堽校区）', '男', null);
+INSERT INTO `guet_customer` VALUES ('18', '14', null, '小明明', '18776423429', '3021988923@qq.com', '广西水利电力职业技术学院（长堽校区）', '男', null);
+INSERT INTO `guet_customer` VALUES ('19', '14', null, '杨', '18776423429', '3021988923@qq.com', '广西水利电力职业技术学院（长堽校区）', '女', null);
+
+-- ----------------------------
+-- Table structure for `guet_logistics`
+-- ----------------------------
+DROP TABLE IF EXISTS `guet_logistics`;
+CREATE TABLE `guet_logistics` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `order_id` int NOT NULL COMMENT '订单ID',
+  `status` tinyint NOT NULL COMMENT '状态: 1待取件 2已取件 3运输中 4已到达 5派送中 6已签收',
+  `location` varchar(100) DEFAULT NULL COMMENT '当前位置',
+  `operator` varchar(50) DEFAULT NULL COMMENT '操作人',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_order_id` (`order_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ----------------------------
+-- Records of guet_logistics
+-- ----------------------------
+INSERT INTO `guet_logistics` VALUES ('1', '13', '3', '北京', '自己人', '贵重物品 轻拿轻放', '2025-12-19 14:02:22');
+INSERT INTO `guet_logistics` VALUES ('2', '13', '5', '我家', '自己人', '', '2025-12-19 14:14:17');
+INSERT INTO `guet_logistics` VALUES ('3', '16', '2', '福建', '自己人', '物件较大', '2025-12-19 14:22:15');
+INSERT INTO `guet_logistics` VALUES ('4', '16', '3', '广西', '自己人', '', '2025-12-19 14:26:15');
+INSERT INTO `guet_logistics` VALUES ('5', '15', '4', ' 广西水利电力职业技术学院（长堽校区）', '自己人', '', '2025-12-19 14:27:08');
+INSERT INTO `guet_logistics` VALUES ('6', '15', '5', ' 广西水利电力职业技术学院（长堽校区', '自己人', '', '2025-12-19 14:29:29');
+INSERT INTO `guet_logistics` VALUES ('7', '14', '2', '大连', '自己人', '', '2025-12-19 14:29:41');
+INSERT INTO `guet_logistics` VALUES ('8', '14', '3', '广西', '自己人', '', '2025-12-19 14:30:04');
+INSERT INTO `guet_logistics` VALUES ('9', '14', '4', '广西水利电力职业技术学院', '自己人', '', '2025-12-19 14:30:38');
+
+-- ----------------------------
+-- Table structure for `guet_operation_log`
+-- ----------------------------
+DROP TABLE IF EXISTS `guet_operation_log`;
+CREATE TABLE `guet_operation_log` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `user_id` bigint DEFAULT NULL COMMENT '操作用户ID',
+  `username` varchar(50) DEFAULT NULL COMMENT '操作用户名',
+  `module` varchar(50) DEFAULT NULL COMMENT '操作模块：用户管理/订单管理/客户管理等',
+  `operation` varchar(50) DEFAULT NULL COMMENT '操作类型：新增/修改/删除/查询/登录/登出',
+  `method` varchar(200) DEFAULT NULL COMMENT '请求方法',
+  `params` text COMMENT '请求参数',
+  `ip` varchar(50) DEFAULT NULL COMMENT '操作IP',
+  `status` tinyint DEFAULT '1' COMMENT '状态：1成功 0失败',
+  `error_msg` text COMMENT '错误信息',
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '操作时间',
+  PRIMARY KEY (`id`),
+  KEY `idx_user_id` (`user_id`),
+  KEY `idx_create_time` (`create_time`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='操作日志表';
+
+-- ----------------------------
+-- Records of guet_operation_log
+-- ----------------------------
+INSERT INTO `guet_operation_log` VALUES ('1', '1', '未知用户', '订单管理', '新增订单', 'com.yang.guetconsumerr.controller.GuetOrderController.addOrder()', '[{\"address\":\"北京\",\"brand\":\"欧莱雅\",\"citi\":\"大连\",\"customerId\":2,\"desc\":\"护肤品\",\"name\":\"洗面奶\",\"number\":30,\"payment\":\"全款\",\"person\":\"张记\",\"phone\":\"18776423429\",\"pickup\":\"上门取件\",\"price\":78,\"shipping\":\"海运\",\"total\":2340,\"unit\":\"件\",\"userId\":1}]', '127.0.0.1', '1', null, '2025-12-20 02:11:12');
+INSERT INTO `guet_operation_log` VALUES ('2', '1', '自己人', '系统', '用户登录', 'com.yang.guetconsumerr.controller.GuetController.verifyLogin()', '[{\"password\":\"123456\",\"username\":\"admin\"},{}]', '127.0.0.1', '1', null, '2025-12-20 02:31:25');
+INSERT INTO `guet_operation_log` VALUES ('3', '1', '自己人', '系统', '用户登录', 'com.yang.guetconsumerr.controller.GuetController.verifyLogin()', '[{\"password\":\"123456\",\"username\":\"hello\"},{}]', '127.0.0.1', '1', null, '2025-12-20 02:35:46');
+INSERT INTO `guet_operation_log` VALUES ('4', '14', '111', '用户管理', '保存用户', 'com.yang.guetconsumerr.controller.GuetController.saveUser()', '[{\"roleIds\":[10,36,9],\"user\":{\"id\":1,\"memo\":\"管理员账号\",\"name\":\"马化腾\",\"password\":\"123456\",\"phone\":\"15011113652\",\"sex\":\"男\",\"username\":\"admin\"}}]', '127.0.0.1', '1', null, '2025-12-20 02:40:57');
+INSERT INTO `guet_operation_log` VALUES ('5', '14', '111', '用户管理', '保存用户', 'com.yang.guetconsumerr.controller.GuetController.saveUser()', '[{\"roleIds\":[10,9],\"user\":{\"id\":1,\"memo\":\"管理员账号\",\"name\":\"马化腾\",\"password\":\"123456\",\"phone\":\"15011113652\",\"sex\":\"男\",\"username\":\"admin\"}}]', '127.0.0.1', '1', null, '2025-12-20 02:43:02');
+INSERT INTO `guet_operation_log` VALUES ('6', '14', '111', '系统', '用户登录', 'com.yang.guetconsumerr.controller.GuetController.verifyLogin()', '[{\"password\":\"123456\",\"username\":\"admin\"},{}]', '127.0.0.1', '1', null, '2025-12-20 02:56:54');
+INSERT INTO `guet_operation_log` VALUES ('7', '1', '马化腾', '系统', '用户登录', 'com.yang.guetconsumerr.controller.GuetController.verifyLogin()', '[{\"password\":\"123456\",\"username\":\"admin\"},{}]', '127.0.0.1', '1', null, '2025-12-20 02:56:58');
+INSERT INTO `guet_operation_log` VALUES ('8', '1', '马化腾', '系统', '用户登录', 'com.yang.guetconsumerr.controller.GuetController.verifyLogin()', '[{\"password\":\"123456\",\"username\":\"hello\"},{}]', '127.0.0.1', '1', null, '2025-12-20 02:59:43');
+INSERT INTO `guet_operation_log` VALUES ('9', '14', '111', '客户管理', '新增客户', 'com.yang.guetconsumerr.controller.CustomerController.insert()', '[{\"address\":\"广西水利电力职业技术学院（长堽校区）\",\"email\":\"3021988923@qq.com\",\"name\":\"杨\",\"phone\":\"18776423429\",\"sex\":\"女\",\"userId\":14}]', '127.0.0.1', '1', null, '2025-12-20 02:59:55');
+INSERT INTO `guet_operation_log` VALUES ('10', '14', '111', '系统', '用户登录', 'com.yang.guetconsumerr.controller.GuetController.verifyLogin()', '[{\"password\":\"123456\",\"username\":\"admin\"},{}]', '127.0.0.1', '1', null, '2025-12-20 03:15:24');
 
 -- ----------------------------
 -- Table structure for `guet_order`
@@ -138,14 +205,18 @@ CREATE TABLE `guet_order` (
   `order_unit` varchar(20) DEFAULT NULL,
   `order_brand` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   PRIMARY KEY (`order_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of guet_order
 -- ----------------------------
-INSERT INTO `guet_order` VALUES ('8', '1', '1', 'td5913698346', '手串', '50', '9', '495', '1', '广西水利电力职业技术学院（长堽校区）', '2025-12-17 04:23:09', '全款', '海运', '大连', '没有bug', '18776423429', '王天罡', '上门取件', '个', '百年老树');
-INSERT INTO `guet_order` VALUES ('10', '1', '1', 'td5914135042', '电脑', '5', '5000', '25000', '1', '广西区桂林市金鸡路1号', '2025-12-17 03:42:15', '预付定金', '空运', '大连', '不要报错', '18776423429', '自己人', '自动配送', '斤', '苹果');
 INSERT INTO `guet_order` VALUES ('11', '5', '15', 'td5916659401', '电脑', '5', '5000', '25000', '1', '广西区桂林市金鸡路1号', '2025-12-17 04:24:19', '全款', '海运', '大连', '不要报错', '18776423429', '自己人', '上门取件', '斤', '苹果');
+INSERT INTO `guet_order` VALUES ('13', '1', '2', 'td5938365049', '被子', '8', '17', '136', '1', '广西区桂林市金鸡路1号', '2025-12-17 10:26:05', '预付定金', '空运', '大连', '轻拿轻放', '18776423429', '暂放小卖部', '快递邮寄', '个', '京东甄选');
+INSERT INTO `guet_order` VALUES ('14', '1', '16', 'td5938555898', '笔记本', '5', '7777', '38885', '1', '广西水利电力职业技术学院（长堽校区）', '2025-12-17 10:29:15', '全款', '海运', '大连', '666', '18776423429', '小黑', '上门取件', '斤', '华为');
+INSERT INTO `guet_order` VALUES ('15', '1', '17', 'td5938678491', '椅子', '5', '88', '440', '1', '广西水利电力职业技术学院（长堽校区）', '2025-12-17 10:31:18', '全款', '海运', '大连', '', '18776423429', '杨果', '上门取件', '斤', '拼多多');
+INSERT INTO `guet_order` VALUES ('16', '1', '17', 'td6125165963', '塑料颗', '10', '0', '8', '1', '广西水利电力职业技术学院（长堽校区）', '2025-12-19 14:19:25', '全款', '海运', '宁波', '塑料', '18776423429', '张经理', '上门取件', '斤', '三无产品');
+INSERT INTO `guet_order` VALUES ('17', '14', '18', 'td6126046782', '内裤', '50', '9', '450', '1', '广西水利电力职业技术学院（长堽校区）', '2025-12-19 14:34:06', '全款', '海运', '大连', '急用，请优先发货', '18776423429', '杨总', '上门取件', '件', '纯棉');
+INSERT INTO `guet_order` VALUES ('18', '1', '2', 'td6167872678', '洗面奶', '30', '78', '2340', '1', '北京', '2025-12-20 02:11:12', '全款', '海运', '大连', '护肤品', '18776423429', '张记', '上门取件', '件', '欧莱雅');
 
 -- ----------------------------
 -- Table structure for `guet_role`
@@ -195,7 +266,7 @@ CREATE TABLE `guet_user` (
 -- ----------------------------
 -- Records of guet_user
 -- ----------------------------
-INSERT INTO `guet_user` VALUES ('1', 'admin', '$2a$10$aaYV4UAtwpwXbI8nnudeGuruueF4ZIlqsK5NkHEfdt2nO64yEClcS', '隔壁老王1', '15011113652', 'https://oss.aliyuncs.com/aliyun_id_photo_bucket/default_handsome.jpg', '管理员账号', '1', '2025-08-01 10:17:18', '2025-12-16 07:43:48', '男');
+INSERT INTO `guet_user` VALUES ('1', 'admin', '$2a$10$gsJYGPZNz1fcpquHZYRey.RoZXVlFGp9EqkM.9LbRwHfAcmp9.Fpa', '马化腾', '15011113652', 'https://oss.aliyuncs.com/aliyun_id_photo_bucket/default_handsome.jpg', '管理员账号', '1', '2025-08-01 10:17:18', '2025-12-20 02:43:02', '男');
 INSERT INTO `guet_user` VALUES ('5', 'zhangsan', '$2a$10$EBAjGQz4zfn8SiX1WF4G6upRfWOqJ8w9xIEpTpYPO//SmM4pWiagy', '张三33', '13589658968', 'https://oss.aliyuncs.com/aliyun_id_photo_bucket/default_handsome.jpg', '', '1', '2025-08-01 10:17:18', '2025-12-16 09:14:15', '男');
 INSERT INTO `guet_user` VALUES ('6', 'test1212', '$2a$10$EBAjGQz4zfn8SiX1WF4G6upRfWOqJ8w9xIEpTpYPO//SmM4pWiagy', 'test12', '15011245632', 'https://oss.aliyuncs.com/aliyun_id_photo_bucket/default_handsome.jpg', 'test12', '0', '2025-08-01 10:17:18', '2025-12-16 07:42:57', '男');
 INSERT INTO `guet_user` VALUES ('12', 'lucy1', '$2a$10$EBAjGQz4zfn8SiX1WF4G6upRfWOqJ8w9xIEpTpYPO//SmM4pWiagy', '1', '1', 'https://oss.aliyuncs.com/aliyun_id_photo_bucket/default_handsome.jpg', '1', '1', '2025-08-01 10:17:18', '2025-12-16 07:42:57', '男');
@@ -218,7 +289,7 @@ CREATE TABLE `guet_user_role` (
   PRIMARY KEY (`id`),
   KEY `idx_role_id` (`role_id`),
   KEY `idx_admin_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb3 COMMENT='用户角色';
+) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb3 COMMENT='用户角色';
 
 -- ----------------------------
 -- Records of guet_user_role
@@ -227,32 +298,5 @@ INSERT INTO `guet_user_role` VALUES ('18', '45', '5');
 INSERT INTO `guet_user_role` VALUES ('26', '45', '30');
 INSERT INTO `guet_user_role` VALUES ('27', '10', '30');
 INSERT INTO `guet_user_role` VALUES ('28', '38', '30');
-INSERT INTO `guet_user_role` VALUES ('43', '10', '1');
-INSERT INTO `guet_user_role` VALUES ('44', '36', '1');
-INSERT INTO `guet_user_role` VALUES ('45', '9', '1');
-
--- ----------------------------
--- Table structure for `guet_logistics`
--- ----------------------------
-DROP TABLE IF EXISTS `guet_logistics`;
-CREATE TABLE `guet_logistics` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `order_id` int NOT NULL COMMENT '订单ID',
-  `status` tinyint NOT NULL COMMENT '状态: 1待取件 2已取件 3运输中 4已到达 5派送中 6已签收',
-  `location` varchar(100) DEFAULT NULL COMMENT '当前位置',
-  `operator` varchar(50) DEFAULT NULL COMMENT '操作人',
-  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
-  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  PRIMARY KEY (`id`),
-  KEY `idx_order_id` (`order_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='物流轨迹表';
-
--- ----------------------------
--- Records of guet_logistics (示例数据)
--- ----------------------------
-INSERT INTO `guet_logistics` (`order_id`, `status`, `location`, `operator`, `remark`) VALUES 
-(8, 1, '广西水利电力职业技术学院（长堽校区）', '系统', '订单已创建，等待取件'),
-(8, 2, '南宁市青秀区营业点', '快递员小李', '已取件'),
-(8, 3, '南宁转运中心', '系统', '包裹已发出，正在运输中'),
-(10, 1, '广西区桂林市金鸡路1号', '系统', '订单已创建，等待取件'),
-(11, 1, '广西区桂林市金鸡路1号', '系统', '订单已创建，等待取件');
+INSERT INTO `guet_user_role` VALUES ('52', '10', '1');
+INSERT INTO `guet_user_role` VALUES ('53', '9', '1');
