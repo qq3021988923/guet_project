@@ -10,7 +10,8 @@ import java.util.List;
 public interface GuetOrderService {
 
 
-
+    @GetMapping("/order/selectUsercus/{userId}")
+    public List<GuetOrder> selectByUserIdWithCustomer(@PathVariable Long userId);
 
     @GetMapping("/order/list")
     List<GuetOrder> list();

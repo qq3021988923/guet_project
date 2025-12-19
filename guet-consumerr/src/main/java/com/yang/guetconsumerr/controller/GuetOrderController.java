@@ -1,7 +1,9 @@
 package com.yang.guetconsumerr.controller;
 
+import com.yang.annotation.OperationLog;
 import com.yang.guetconsumerr.feignService.*;
 import com.yang.pojo.*;
+import com.yang.pojo.GuetLogistics;
 import com.yang.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,9 +28,21 @@ public class GuetOrderController {
     @Autowired
     private CustomerService customerService;
 
+
+    //   // http://localhost:8088/consumer/api/order/selectUsercus/1
+    @GetMapping("/selectUsercus/{userId}")
+    public Result<List<GuetOrder>> selectByUserIdWithCustomer(@PathVariable Long userId) {
+        List<GuetOrder> guetOrders = service.selectByUserIdWithCustomer(userId);
+        return Result.build(guetOrders,guetOrders==null?500:200,"my order");
+    }
+
+    @Autowired
+    private LogisticsService logisticsService;
+
     // http://localhost:8088/consumer/api/order/addorder
+    @OperationLog(module = "订单管理", operation = "新增订单")
     @PostMapping("/addorder")
-    public Result<Integer> addOrder(@RequestBody GuetOrder order){
+    public Result<GuetOrder> addOrder(@RequestBody GuetOrder order){
         System.out.println(order.getPerson());
 
         // "td" + System.currentTimeMillis() % 10000000000L;
@@ -36,7 +50,16 @@ public class GuetOrderController {
         order.setStatus(1);
         int i = service.insert(order);
 
-        return Result.build(i,i==0?500:200,"客户下单");
+        // 新增成功后初始化物流记录
+        if (i > 0 && order.getId() != null) {
+            try {
+                logisticsService.initLogistics(order.getId(), order.getAddress(), null);
+            } catch (Exception e) {
+                System.out.println("初始化物流记录失败: " + e.getMessage());
+            }
+        }
+
+        return Result.build(order, i == 0 ? 500 : 200, "客户下单");
     }
 
     // http://localhost:8088/consumer/api/order/orderdetails/1
@@ -113,6 +136,14 @@ public class GuetOrderController {
         return Result.build(list, 200, "查询成功");
     }
 
+    // http://localhost:8088/consumer/api/order/search
+    // 模糊搜索订单（按订单号/货物名称）
+    @PostMapping("/search")
+    public Result<List<GuetOrder>> search(@RequestBody GuetOrder order) {
+        List<GuetOrder> list = service.query(order);
+        return Result.build(list, 200, "搜索成功");
+    }
+
     // http://localhost:8088/consumer/api/order/user
     @GetMapping("/user")
     public Result<List<GuetOrder>> getByUserId(@RequestParam(required = false) Long userId) {
@@ -126,12 +157,14 @@ public class GuetOrderController {
         return Result.build(i, i == 0 ? 500 : 200, i == 0 ? "添加失败" : "添加订单成功");
     }
 
+    @OperationLog(module = "订单管理", operation = "修改订单")
     @PostMapping("/update")
     public Result<Integer> update(@RequestBody GuetOrder order) {
         int i = service.update(order);
         return Result.build(i, i == 0 ? 500 : 200, i == 0 ? "更新失败" : "更新订单成功");
     }
 
+    @OperationLog(module = "订单管理", operation = "删除订单")
     @GetMapping("/delete/{id}")
     public Result<Integer> delete(@PathVariable Integer id) {
         int i = service.delete(id);

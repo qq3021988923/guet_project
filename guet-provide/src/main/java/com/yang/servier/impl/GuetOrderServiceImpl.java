@@ -15,6 +15,11 @@ public class GuetOrderServiceImpl implements IGuetOrderService {
     private OrderMapper orderMapper;
 
     @Override
+    public List<GuetOrder> selectByUserIdWithCustomer(Long userId) {
+        return orderMapper.selectByUserIdWithCustomer(userId);
+    }
+
+    @Override
     public List<GuetOrder> selectAll() {
         return orderMapper.selectAll();
     }

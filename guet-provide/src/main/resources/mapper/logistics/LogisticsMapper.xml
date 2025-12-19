@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yang.mapper.LogisticsMapper">
+
+    <resultMap id="LogisticsMap" type="com.yang.pojo.GuetLogistics" autoMapping="true">
+        <id property="id" column="id"/>
+        <result property="orderId" column="order_id"/>
+        <result property="status" column="status"/>
+        <result property="location" column="location"/>
+        <result property="operator" column="operator"/>
+        <result property="remark" column="remark"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="columns">
+        id, order_id, status, location, operator, remark, create_time
+    </sql>
+
+    <!-- 根据订单ID查询物流轨迹（按时间倒序） -->
+    <select id="selectByOrderId" resultMap="LogisticsMap">
+        select <include refid="columns"/>
+        from guet_logistics
+        where order_id = #{orderId}
+        order by create_time desc
+    </select>
+
+    <!-- 查询订单最新物流状态 -->
+    <select id="selectLatestByOrderId" resultMap="LogisticsMap">
+        select <include refid="columns"/>
+        from guet_logistics
+        where order_id = #{orderId}
+        order by create_time desc
+        limit 1
+    </select>
+
+    <!-- 新增物流记录 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into guet_logistics (order_id, status, location, operator, remark, create_time)
+        values (#{orderId}, #{status}, #{location}, #{operator}, #{remark}, now())
+    </insert>
+
+    <!-- 批量新增 -->
+    <insert id="batchInsert">
+        insert into guet_logistics (order_id, status, location, operator, remark, create_time)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.orderId}, #{item.status}, #{item.location}, #{item.operator}, #{item.remark}, now())
+        </foreach>
+    </insert>
+
+    <!-- 删除订单相关的物流记录 -->
+    <delete id="deleteByOrderId">
+        delete from guet_logistics where order_id = #{orderId}
+    </delete>
+
+</mapper>

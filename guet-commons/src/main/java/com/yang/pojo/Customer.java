@@ -1,6 +1,7 @@
 package com.yang.pojo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.yang.dto.CustomerName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -8,7 +9,7 @@ import java.util.Date;
 
 @Data
 @Schema(description = "客户实体类")
-public class Customer {
+public class Customer{
 
     @Schema(description = "客户ID")
     private Integer id;

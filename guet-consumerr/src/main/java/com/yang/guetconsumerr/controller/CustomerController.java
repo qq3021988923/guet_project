@@ -1,5 +1,6 @@
 package com.yang.guetconsumerr.controller;
 
+import com.yang.annotation.OperationLog;
 import com.yang.guetconsumerr.feignService.CustomerService;
 import com.yang.pojo.Customer;
 import com.yang.utils.Result;
@@ -38,6 +39,7 @@ public class CustomerController {
     }
 
     // http://localhost:8088/consumer/api/cust/insert
+    @OperationLog(module = "客户管理", operation = "新增客户")
     @PostMapping("/insert")
     public Result<Integer> insert(@RequestBody Customer customer) {
         int i = customerService.insert(customer);
@@ -45,6 +47,7 @@ public class CustomerController {
     }
 
     // http://localhost:8088/consumer/api/cust/update
+    @OperationLog(module = "客户管理", operation = "修改客户")
     @PostMapping("/update")
     public Result<Integer> updateById(@RequestBody Customer customer) {
         int i = customerService.updateById(customer);
@@ -52,6 +55,7 @@ public class CustomerController {
     }
 
     // http://localhost:8088/consumer/api/cust/delete
+    @OperationLog(module = "客户管理", operation = "删除客户")
     @GetMapping("/delete/{id}")
     public Result<Integer> deleteById(@PathVariable Integer id) {
         int i = customerService.deleteById(id);

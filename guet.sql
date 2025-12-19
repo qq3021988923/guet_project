@@ -230,3 +230,29 @@ INSERT INTO `guet_user_role` VALUES ('28', '38', '30');
 INSERT INTO `guet_user_role` VALUES ('43', '10', '1');
 INSERT INTO `guet_user_role` VALUES ('44', '36', '1');
 INSERT INTO `guet_user_role` VALUES ('45', '9', '1');
+
+-- ----------------------------
+-- Table structure for `guet_logistics`
+-- ----------------------------
+DROP TABLE IF EXISTS `guet_logistics`;
+CREATE TABLE `guet_logistics` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `order_id` int NOT NULL COMMENT '订单ID',
+  `status` tinyint NOT NULL COMMENT '状态: 1待取件 2已取件 3运输中 4已到达 5派送中 6已签收',
+  `location` varchar(100) DEFAULT NULL COMMENT '当前位置',
+  `operator` varchar(50) DEFAULT NULL COMMENT '操作人',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  KEY `idx_order_id` (`order_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='物流轨迹表';
+
+-- ----------------------------
+-- Records of guet_logistics (示例数据)
+-- ----------------------------
+INSERT INTO `guet_logistics` (`order_id`, `status`, `location`, `operator`, `remark`) VALUES 
+(8, 1, '广西水利电力职业技术学院（长堽校区）', '系统', '订单已创建，等待取件'),
+(8, 2, '南宁市青秀区营业点', '快递员小李', '已取件'),
+(8, 3, '南宁转运中心', '系统', '包裹已发出，正在运输中'),
+(10, 1, '广西区桂林市金鸡路1号', '系统', '订单已创建，等待取件'),
+(11, 1, '广西区桂林市金鸡路1号', '系统', '订单已创建，等待取件');

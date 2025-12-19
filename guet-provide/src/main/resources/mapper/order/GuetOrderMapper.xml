@@ -33,6 +33,19 @@
     order_pickup, order_unit ,order_brand
     </sql>
 
+
+    <!-- 根据用户ID查询订单（带客户名称） -->
+    <select id="selectByUserIdWithCustomer" resultMap="OrderMap">
+        select o.*, c.customer_name as customerName
+        from guet_order o
+        left join guet_customer c on o.customer_id = c.customer_id
+        <where>
+            <if test="userId != null">
+                and o.user_id = #{userId}
+            </if>
+        </where>
+    </select>
+
     <!-- 查询所有订单 -->
     <select id="selectAll" resultMap="OrderMap">
         select <include refid="columns"/> from guet_order
@@ -47,6 +60,9 @@
     <select id="selectByCondition" resultMap="OrderMap">
         select <include refid="columns"/> from guet_order
         <where>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
             <if test="name != null and name != ''">
                 and order_name like concat('%', #{name}, '%')
             </if>

@@ -8,6 +8,8 @@ import java.util.List;
 @Mapper
 public interface OrderMapper {
 
+    List<GuetOrder> selectByUserIdWithCustomer(Long userId);
+
     List<GuetOrder> selectAll();
 
     GuetOrder selectById(Integer id);

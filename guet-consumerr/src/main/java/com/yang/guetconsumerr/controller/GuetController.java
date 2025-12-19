@@ -1,5 +1,6 @@
 package com.yang.guetconsumerr.controller;
 
+import com.yang.annotation.OperationLog;
 import com.yang.dto.UserDto;
 import com.yang.guetconsumerr.feignService.CustomerService;
 import com.yang.guetconsumerr.feignService.GuetRoleService;
@@ -46,6 +47,7 @@ public class GuetController {
 
 
     // http://localhost:8088/consumer/api/user/save
+    @OperationLog(module = "用户管理", operation = "保存用户")
     @PostMapping("/save")
     public Result<Integer> saveUser(@RequestBody UserDto user){
 
@@ -155,6 +157,7 @@ public class GuetController {
 
 
     // 访问网关 http://localhost:8088/consumer/api/user/delete/1
+    @OperationLog(module = "用户管理", operation = "禁用用户")
     @GetMapping("/delete/{id}")
     public Result<Integer> deleteUserById(@PathVariable  Long id) {
         int i = userService.deleteUserById(id);
@@ -163,6 +166,7 @@ public class GuetController {
 
 
     // 访问网关 http://localhost:8088/consumer/api/user/pydelete
+    @OperationLog(module = "用户管理", operation = "删除用户")
     @GetMapping("/pydelete/{id}")
     public Result<Integer> deleteUserPhysicallyById(@PathVariable  Long id) {
 
@@ -178,6 +182,7 @@ public class GuetController {
     }
 
     // 访问网关 http://localhost:8088/consumer/api/user/upstatus/16
+    @OperationLog(module = "用户管理", operation = "启用用户")
     @GetMapping("/upstatus/{id}")
     public Result<Integer> updateStatus(@PathVariable  Long id) {
 
@@ -187,6 +192,7 @@ public class GuetController {
     }
 
     // http://localhost:8088/consumer/api/user/login
+    @OperationLog(module = "系统", operation = "用户登录")
     @PostMapping("/login")
     public Result<Map<String, Object>> verifyLogin(@RequestBody GuetUser user, UserRole urole){
 

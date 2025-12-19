@@ -16,6 +16,16 @@ public class GuetOrderController {
     @Autowired
     private IGuetOrderService iGuetOrderService;
 
+
+    // 客户对应的订单
+    // http://localhost:8888/order/selectUsercus/1
+    @GetMapping("/selectUsercus/{userId}")
+    public List<GuetOrder> selectByUserIdWithCustomer(@PathVariable Long userId) {
+        List<GuetOrder> guetOrders = iGuetOrderService.selectByUserIdWithCustomer(userId);
+        return guetOrders;
+    }
+
+
     // 查询所有订单
     // http://localhost:8888/order/list
     @GetMapping("/list")

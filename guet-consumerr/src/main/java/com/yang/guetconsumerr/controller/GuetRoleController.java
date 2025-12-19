@@ -1,5 +1,6 @@
 package com.yang.guetconsumerr.controller;
 
+import com.yang.annotation.OperationLog;
 import com.yang.guetconsumerr.feignService.GuetRoleService;
 import com.yang.pojo.GuetRole;
 import com.yang.utils.Result;
@@ -36,6 +37,7 @@ public class GuetRoleController {
     }
 
     // 访问网关 http://localhost:8088/consumer/api/role/delete/{id}
+    @OperationLog(module = "角色管理", operation = "删除角色")
     @GetMapping("/delete/{id}")
     public Result<Integer> deleteById(@PathVariable  Long id) {
 
@@ -45,6 +47,7 @@ public class GuetRoleController {
     }
 
     // 访问网关 http://localhost:8088/consumer/api/role/update
+    @OperationLog(module = "角色管理", operation = "修改角色")
     @PostMapping("/update")
     public Result<Integer> updateRole(@RequestBody GuetRole role) {
 
@@ -54,6 +57,7 @@ public class GuetRoleController {
     }
 
     // 访问网关 http://localhost:8088/consumer/api/role/insert
+    @OperationLog(module = "角色管理", operation = "新增角色")
     @PostMapping("/insert")
     public Result<Integer> insertRole(@RequestBody GuetRole role) {
 
