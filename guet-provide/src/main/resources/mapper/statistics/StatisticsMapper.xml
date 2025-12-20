@@ -55,13 +55,18 @@
         GROUP BY l.status
     </select>
 
-    <!-- 获取总营收 -->
+    <!-- 获取总营收（按用户ID过滤） -->
     <select id="getTotalRevenue" resultType="java.util.Map">
         SELECT 
             COUNT(*) as orderCount,
             IFNULL(SUM(order_total), 0) as totalRevenue,
             IFNULL(AVG(order_total), 0) as avgRevenue
         FROM guet_order
+        <where>
+            <if test="userId != null">
+                user_id = #{userId}
+            </if>
+        </where>
     </select>
 
 </mapper>

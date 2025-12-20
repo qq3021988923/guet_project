@@ -1,6 +1,8 @@
 package com.yang.guetconsumerr.controller;
 
 import com.yang.annotation.OperationLog;
+import com.yang.dto.OrderBatchDTO;
+import com.yang.dto.OrderItemDTO;
 import com.yang.guetconsumerr.feignService.*;
 import com.yang.pojo.*;
 import com.yang.pojo.GuetLogistics;
@@ -42,24 +44,54 @@ public class GuetOrderController {
     // http://localhost:8088/consumer/api/order/addorder
     @OperationLog(module = "订单管理", operation = "新增订单")
     @PostMapping("/addorder")
-    public Result<GuetOrder> addOrder(@RequestBody GuetOrder order){
-        System.out.println(order.getPerson());
+    public Result<List<GuetOrder>> addOrder(@RequestBody OrderBatchDTO dto){
+        List<GuetOrder> orders = new ArrayList<>();
+        List<OrderItemDTO> items = dto.getItems();
 
-        // "td" + System.currentTimeMillis() % 10000000000L;
-        order.setNum("td" + System.currentTimeMillis() % 10000000000L);
-        order.setStatus(1);
-        int i = service.insert(order);
+        for (int i = 0; i < items.size(); i++) {
+            GuetOrder order = new GuetOrder();
+            // 复制基本信息
+            order.setUserId(dto.getUserId());
+            order.setCustomerId(dto.getCustomerId());
+            order.setAddress(dto.getAddress());
+            order.setPhone(dto.getPhone());
+            order.setPerson(dto.getPerson());
+            order.setCiti(dto.getCiti());
+            order.setPayment(dto.getPayment());
+            order.setShipping(dto.getShipping());
+            order.setPickup(dto.getPickup());
+            order.setDesc(dto.getDesc());
 
-        // 新增成功后初始化物流记录
-        if (i > 0 && order.getId() != null) {
-            try {
-                logisticsService.initLogistics(order.getId(), order.getAddress(), null);
-            } catch (Exception e) {
-                System.out.println("初始化物流记录失败: " + e.getMessage());
+            // 每个订单独立生成订单号
+            order.setNum("td" + System.currentTimeMillis() % 10000000000L);
+            order.setStatus(1);
+
+            // 设置货物信息
+            OrderItemDTO item = items.get(i);
+            order.setName(item.getName());
+            order.setNumber(item.getNumber());
+            order.setUnit(item.getUnit());
+            order.setPrice(item.getPrice());
+            order.setTotal(item.getTotal());
+            order.setBrand(item.getBrand());
+
+            // 插入数据库，返回包含ID的order对象
+            GuetOrder savedOrder = service.insert(order);
+
+            // 新增成功后初始化物流记录
+            if (savedOrder != null && savedOrder.getId() != null) {
+                try {
+                    logisticsService.initLogistics(savedOrder.getId(), savedOrder.getAddress(), null);
+                } catch (Exception e) {
+                    System.out.println("初始化物流记录失败: " + e.getMessage());
+                }
             }
+
+            orders.add(savedOrder != null ? savedOrder : order);
+
         }
 
-        return Result.build(order, i == 0 ? 500 : 200, "客户下单");
+        return Result.build(orders, 200, "下单成功，共" + items.size() + "个订单");
     }
 
     // http://localhost:8088/consumer/api/order/orderdetails/1
@@ -151,11 +183,11 @@ public class GuetOrderController {
         return Result.build(list, 200, "查询成功");
     }
 
-    @PostMapping("/insert")
-    public Result<Integer> insert(@RequestBody GuetOrder order) {
-        int i = service.insert(order);
-        return Result.build(i, i == 0 ? 500 : 200, i == 0 ? "添加失败" : "添加订单成功");
-    }
+//    @PostMapping("/insert")
+//    public Result<Integer> insert(@RequestBody GuetOrder order) {
+//        int i = service.insert(order);
+//        return Result.build(i, i == 0 ? 500 : 200, i == 0 ? "添加失败" : "添加订单成功");
+//    }
 
     @OperationLog(module = "订单管理", operation = "修改订单")
     @PostMapping("/update")

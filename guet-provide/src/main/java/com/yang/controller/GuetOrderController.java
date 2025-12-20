@@ -57,8 +57,9 @@ public class GuetOrderController {
 
     // 新增订单
     @PostMapping("/insert")
-    public int insert(@RequestBody GuetOrder order) {
-        return iGuetOrderService.insert(order);
+    public GuetOrder insert(@RequestBody GuetOrder order) {
+        iGuetOrderService.insert(order);
+        return order;  // 返回包含自动生成ID的order对象
     }
 
     // 更新订单

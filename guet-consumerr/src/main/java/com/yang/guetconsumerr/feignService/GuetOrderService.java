@@ -26,7 +26,7 @@ public interface GuetOrderService {
     List<GuetOrder> getByUserId(@RequestParam(required = false) Long userId);
 
     @PostMapping("/order/insert")
-    int insert(@RequestBody GuetOrder order);
+    GuetOrder insert(@RequestBody GuetOrder order);
 
     @PostMapping("/order/update")
     int update(@RequestBody GuetOrder order);
