@@ -208,9 +208,13 @@ public class GuetController {
         }
 
         String token = jwtUtil.generateToken(user.getUsername());
+
         Long uid = users.getId();
+
         urole.setUserId(uid);
+
         List<UserRole> lists = userRoleService.listUserRoleByCondition(urole);
+
         List<String> rname = new ArrayList<>();
 
         if(lists != null && !lists.isEmpty()){

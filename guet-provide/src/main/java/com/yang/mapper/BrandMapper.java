@@ -13,5 +13,4 @@ public interface BrandMapper {
 
     //添加
     void save(Brand brand);
-
 }
