@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: guet-consumerr
+  profiles:
+    active: dev
+
+  cloud:
+    nacos:
+      config:
+        server-addr: localhost:8848
+        file-extension: yml
+        namespace: dev
+        group: dev
+
+        # 共享配置（可选）
+        shared-configs:
+          - data-id: common-config.yml
+            group: dev
+            refresh: true

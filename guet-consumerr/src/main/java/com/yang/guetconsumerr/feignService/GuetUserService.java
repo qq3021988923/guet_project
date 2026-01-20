@@ -20,7 +20,7 @@ public interface GuetUserService {
     @GetMapping("/guet/user")
     public Result<List<GuetUser>> getQueryUser();
 
-    @GetMapping("/guet/name")
+    @PostMapping("/guet/name")
     public GuetUser getUserByUsername(@RequestBody GuetUser user);
 
     @PostMapping("/guet/search")
