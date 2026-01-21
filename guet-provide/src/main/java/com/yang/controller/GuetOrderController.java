@@ -91,10 +91,11 @@ public class GuetOrderController {
 
     @GetMapping("/export")
     public ResponseEntity<byte[]> exportExcel(@RequestParam(required = false) Long userId) throws IOException {
-        // 1. 查询订单数据
+
+                // 1. 查询订单数据(带客户信息)
         List<GuetOrder> orders = (userId != null)
-                ? iGuetOrderService.selectByUserId(userId)
-                : iGuetOrderService.selectAll();
+                ? iGuetOrderService.selectByUserIdWithCustomer(userId)
+                : iGuetOrderService.selectAll(); // 这里可能需要新增 selectAllWithCustomer() 方法
 
         // 2. 转换为导出DTO
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
