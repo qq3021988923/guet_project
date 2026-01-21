@@ -4,11 +4,15 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.yang.dto.CustomerName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 
 @Data
 @Schema(description = "订单")
+@Getter
+@Setter
 public class GuetOrder  extends CustomerName {
 
     @Schema(description = "订单ID")

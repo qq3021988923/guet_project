@@ -7,9 +7,12 @@ import com.yang.guetconsumerr.feignService.*;
 import com.yang.pojo.*;
 import com.yang.pojo.GuetLogistics;
 import com.yang.utils.Result;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +32,22 @@ public class GuetOrderController {
 
     @Autowired
     private CustomerService customerService;
+
+    @Autowired
+    private GuetOrderService guetOrderService;
+
+    // 导出Excel
+    @GetMapping("/export")
+    public void exportExcel(@RequestParam(required = false) Long userId, HttpServletResponse response) throws IOException {
+        ResponseEntity<byte[]> result = guetOrderService.exportExcel(userId);
+        // 设置响应头
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", result.getHeaders().getFirst("Content-Disposition"));
+
+        // 写入响应
+        response.getOutputStream().write(result.getBody());
+        response.getOutputStream().flush();
+    }
 
 
     //   // http://localhost:8088/consumer/api/order/selectUsercus/1

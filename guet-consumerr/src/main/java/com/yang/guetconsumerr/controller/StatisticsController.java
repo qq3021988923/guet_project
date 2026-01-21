@@ -18,6 +18,7 @@ public class StatisticsController {
     /**
      * 获取综合统计数据
      * GET /api/statistics/overview?userId=1
+     * http://localhost:8088/consumer/api/statistics/overview
      */
     @GetMapping("/overview")
     public Result<Map<String, Object>> getOverviewStats(@RequestParam(required = false) Long userId) {

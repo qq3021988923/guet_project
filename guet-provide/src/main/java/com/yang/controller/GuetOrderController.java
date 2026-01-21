@@ -1,11 +1,25 @@
 package com.yang.controller;
 
+
+import cn.idev.excel.FastExcel;
+import com.yang.dto.OrderExportDTO;
 import com.yang.pojo.GuetOrder;
 import com.yang.servier.IGuetOrderService;
-import com.yang.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import java.io.ByteArrayOutputStream;
 
+
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -72,6 +86,61 @@ public class GuetOrderController {
     @GetMapping("/delete/{id}")
     public int delete(@PathVariable Integer id) {
         return iGuetOrderService.deleteById(id);
+    }
+
+
+    @GetMapping("/export")
+    public ResponseEntity<byte[]> exportExcel(@RequestParam(required = false) Long userId) throws IOException {
+        // 1. 查询订单数据
+        List<GuetOrder> orders = (userId != null)
+                ? iGuetOrderService.selectByUserId(userId)
+                : iGuetOrderService.selectAll();
+
+        // 2. 转换为导出DTO
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        List<OrderExportDTO> exportData = new ArrayList<>();
+
+        for (GuetOrder order : orders) {
+            OrderExportDTO dto = new OrderExportDTO();
+            dto.setNum(order.getNum());
+            dto.setCustomerName(order.getCustomerName());
+            dto.setName(order.getName());
+            dto.setBrand(order.getBrand());
+            dto.setNumber(order.getNumber());
+            dto.setUnit(order.getUnit());
+            dto.setPrice(order.getPrice());
+            dto.setTotal(order.getTotal());
+            dto.setPerson(order.getPerson());
+            dto.setPhone(order.getPhone());
+            dto.setAddress(order.getAddress());
+            dto.setCiti(order.getCiti());
+            dto.setShipping(order.getShipping());
+            dto.setPayment(order.getPayment());
+            dto.setPickup(order.getPickup());
+            dto.setCreateTime(order.getCreateTime() != null ? sdf.format(order.getCreateTime()) : "");
+            dto.setDesc(order.getDesc());
+            exportData.add(dto);
+        }
+
+        // 3. 创建字节数组输出流
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        // 4. 使用 FastExcel 写入到字节数组
+        FastExcel.write(outputStream, OrderExportDTO.class)
+                .sheet("订单列表")
+                .doWrite(exportData);
+
+        // 5. 设置响应头
+        String fileName = "订单导出_" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + ".xlsx";
+        String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8).replaceAll("\\+", "%20");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+        headers.setContentDispositionFormData("attachment", encodedFileName);
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(outputStream.toByteArray());
     }
 
 }

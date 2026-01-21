@@ -1,13 +1,19 @@
 package com.yang.guetconsumerr.feignService;
 
 import com.yang.pojo.GuetOrder;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @FeignClient(name = "guet-provide",contextId = "orderFeign")
 public interface GuetOrderService {
+
+
+    @GetMapping("/order/export")
+    ResponseEntity<byte[]> exportExcel(@RequestParam(required = false) Long userId);
 
 
     @GetMapping("/order/selectUsercus/{userId}")

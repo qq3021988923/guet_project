@@ -25,6 +25,14 @@
             <artifactId>lombok</artifactId>
         </dependency>
 
+<!--        导出表格-->
+        <dependency>
+            <groupId>cn.idev.excel</groupId>
+            <artifactId>fastexcel</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>

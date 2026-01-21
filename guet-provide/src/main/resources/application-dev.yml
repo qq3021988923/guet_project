@@ -6,10 +6,12 @@ spring:
     name: guet-provide
   cloud:
     nacos:
+
       discovery:
         server-addr: localhost:8848
         namespace: dev
         group: dev
+        ip: 127.0.0.1
 
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
