@@ -37,9 +37,11 @@ public class GuetOrderController {
     private GuetOrderService guetOrderService;
 
     // 导出Excel
+    // 访问网关 http://localhost:8088/consumer/api/order/export
     @GetMapping("/export")
     public void exportExcel(@RequestParam(required = false) Long userId, HttpServletResponse response) throws IOException {
         ResponseEntity<byte[]> result = guetOrderService.exportExcel(userId);
+        System.out.println("我是导出");
         // 设置响应头
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setHeader("Content-Disposition", result.getHeaders().getFirst("Content-Disposition"));
@@ -59,6 +61,9 @@ public class GuetOrderController {
 
     @Autowired
     private LogisticsService logisticsService;
+
+    @Autowired
+    private FinanceService financeService;
 
     // http://localhost:8088/consumer/api/order/addorder
     @OperationLog(module = "订单管理", operation = "新增订单")
@@ -103,6 +108,12 @@ public class GuetOrderController {
                     logisticsService.initLogistics(savedOrder.getId(), savedOrder.getAddress(), null);
                 } catch (Exception e) {
                     System.out.println("初始化物流记录失败: " + e.getMessage());
+                }
+                // 自动生成运费结算记录
+                try {
+                    financeService.createFinanceRecord(savedOrder);
+                } catch (Exception e) {
+                    System.out.println("创建运费记录失败: " + e.getMessage());
                 }
             }
 

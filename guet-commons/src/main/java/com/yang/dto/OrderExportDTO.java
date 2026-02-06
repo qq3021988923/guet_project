@@ -59,6 +59,12 @@ public class OrderExportDTO {
     @ExcelProperty("下单时间")
     private String createTime;
 
+    @ExcelProperty("物流状态")
+    private String logisticsStatus;
+
+    @ExcelProperty("结算状态")
+    private String settlementStatus;
+
     @ExcelProperty("备注")
     private String desc;
 }

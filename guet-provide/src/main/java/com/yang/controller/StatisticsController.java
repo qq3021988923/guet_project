@@ -17,6 +17,8 @@ public class StatisticsController {
     /**
      * 获取综合统计数据
      * GET /statistics/overview?userId=1
+     *
+     * 订单趋势、订单状态分布，热门目的地城市 TOP5 这些图标调用的都是同一个接口
      */
     @GetMapping("/overview")
     public Map<String, Object> getOverviewStats(@RequestParam(required = false) Long userId) {

@@ -53,14 +53,15 @@ public class OperationLogAspect {
             log.setOperation(annotation.operation());
         }
         
-        // 获取请求信息
+        // 获取请求对象（方法执行前先拿到 request 引用）
+        HttpServletRequest request = null;
         try {
             ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
             if (attributes != null) {
-                HttpServletRequest request = attributes.getRequest();
+                request = attributes.getRequest();
                 log.setIp(getIpAddress(request));
                 
-                // 从请求头获取用户信息（前端传递）
+                // 先从请求头获取用户信息（前端传递的）
                 String userId = request.getHeader("X-User-Id");
                 String username = request.getHeader("X-Username");
                 if (userId != null && !userId.isEmpty()) {
@@ -70,18 +71,17 @@ public class OperationLogAspect {
                         // 忽略解析错误
                     }
                 }
-                // 解码中文用户名
                 if (username != null && !username.isEmpty()) {
                     try {
                         username = java.net.URLDecoder.decode(username, "UTF-8");
                     } catch (Exception e) {
                         // 解码失败使用原值
                     }
+                    log.setUsername(username);
                 }
-                log.setUsername(username != null ? username : "未知用户");
             }
         } catch (Exception e) {
-            log.setUsername("系统");
+            // 忽略
         }
         
         // 获取方法名和参数
@@ -113,7 +113,28 @@ public class OperationLogAspect {
             log.setErrorMsg(e.getMessage());
             throw e; // 继续抛出异常
         } finally {
-            // 异步保存日志（通过Feign调用Provider）
+            // 方法执行完毕后，如果用户名仍为空（如登录接口），从 request attribute 补充
+            if (request != null && (log.getUsername() == null || log.getUsername().isEmpty())) {
+                try {
+                    Object attrUsername = request.getAttribute("X-Username");
+                    if (attrUsername != null) {
+                        log.setUsername(attrUsername.toString());
+                    }
+                    Object attrUserId = request.getAttribute("X-User-Id");
+                    if (attrUserId != null && log.getUserId() == null) {
+                        log.setUserId(Long.parseLong(attrUserId.toString()));
+                    }
+                } catch (Exception e) {
+                    // 忽略
+                }
+            }
+            
+            // 最终兜底
+            if (log.getUsername() == null || log.getUsername().isEmpty()) {
+                log.setUsername("未知用户");
+            }
+            
+            // 保存日志（通过Feign调用Provider）
             try {
                 operationLogService.save(log);
             } catch (Exception e) {

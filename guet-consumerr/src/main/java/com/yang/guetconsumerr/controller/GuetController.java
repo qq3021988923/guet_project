@@ -12,9 +12,12 @@ import com.yang.pojo.GuetRole;
 import com.yang.pojo.GuetUser;
 import com.yang.pojo.UserRole;
 import com.yang.utils.Result;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -243,6 +246,14 @@ public class GuetController {
 
         response.put("token", token);
         response.put("user", users);
+
+        // 登录成功后，补写请求属性中的用户信息，确保操作日志切面能正确记录
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attributes != null) {
+            HttpServletRequest request = attributes.getRequest();
+            request.setAttribute("X-User-Id", String.valueOf(uid));
+            request.setAttribute("X-Username", users.getName() != null ? users.getName() : users.getUsername());
+        }
 
         return Result.build(response, 200, "登录成功");
     }

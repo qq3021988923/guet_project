@@ -3,6 +3,10 @@ package com.yang.controller;
 
 import cn.idev.excel.FastExcel;
 import com.yang.dto.OrderExportDTO;
+import com.yang.mapper.FinanceMapper;
+import com.yang.mapper.LogisticsMapper;
+import com.yang.pojo.Finance;
+import com.yang.pojo.GuetLogistics;
 import com.yang.pojo.GuetOrder;
 import com.yang.servier.IGuetOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +33,12 @@ public class GuetOrderController {
 
     @Autowired
     private IGuetOrderService iGuetOrderService;
+
+    @Autowired
+    private LogisticsMapper logisticsMapper;
+
+    @Autowired
+    private FinanceMapper financeMapper;
 
 
     // 客户对应的订单
@@ -92,7 +102,7 @@ public class GuetOrderController {
     @GetMapping("/export")
     public ResponseEntity<byte[]> exportExcel(@RequestParam(required = false) Long userId) throws IOException {
 
-                // 1. 查询订单数据(带客户信息)
+        // 1. 查询订单数据(带客户信息)
         List<GuetOrder> orders = (userId != null)
                 ? iGuetOrderService.selectByUserIdWithCustomer(userId)
                 : iGuetOrderService.selectAll(); // 这里可能需要新增 selectAllWithCustomer() 方法
@@ -120,6 +130,28 @@ public class GuetOrderController {
             dto.setPickup(order.getPickup());
             dto.setCreateTime(order.getCreateTime() != null ? sdf.format(order.getCreateTime()) : "");
             dto.setDesc(order.getDesc());
+
+            // 物流状态
+            GuetLogistics latest = logisticsMapper.selectLatestByOrderId(order.getId());
+            if (latest != null) {
+                dto.setLogisticsStatus(latest.getStatusText());
+            } else {
+                dto.setLogisticsStatus("待处理");
+            }
+
+            // 结算状态
+            Finance finance = financeMapper.selectByOrderId(order.getId());
+            if (finance != null) {
+                switch (finance.getPaymentStatus()) {
+                    case 1: dto.setSettlementStatus("待结算"); break;
+                    case 2: dto.setSettlementStatus("部分结算"); break;
+                    case 3: dto.setSettlementStatus("已结算"); break;
+                    default: dto.setSettlementStatus("未知");
+                }
+            } else {
+                dto.setSettlementStatus("无记录");
+            }
+
             exportData.add(dto);
         }
 

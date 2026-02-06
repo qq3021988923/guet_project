@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yang.mapper.FinanceMapper">
+
+    <resultMap id="FinanceMap" type="com.yang.pojo.Finance" autoMapping="true">
+        <id property="id" column="id"/>
+        <result property="orderId" column="order_id"/>
+        <result property="totalAmount" column="total_amount"/>
+        <result property="paidAmount" column="paid_amount"/>
+        <result property="unpaidAmount" column="unpaid_amount"/>
+        <result property="paymentStatus" column="payment_status"/>
+        <result property="paymentCount" column="payment_count"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <resultMap id="FinanceVOMap" type="com.yang.dto.FinanceVO" autoMapping="true">
+        <id property="id" column="id"/>
+        <result property="orderId" column="order_id"/>
+        <result property="totalAmount" column="total_amount"/>
+        <result property="paidAmount" column="paid_amount"/>
+        <result property="unpaidAmount" column="unpaid_amount"/>
+        <result property="paymentStatus" column="payment_status"/>
+        <result property="paymentCount" column="payment_count"/>
+        <result property="createTime" column="create_time"/>
+        <result property="remark" column="remark"/>
+        <result property="orderNum" column="order_num"/>
+        <result property="orderName" column="order_name"/>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="customerId" column="customer_id"/>
+        <result property="customerName" column="customer_name"/>
+        <result property="shippingMethod" column="order_shipping"/>
+        <result property="logisticsStatus" column="logistics_status"/>
+    </resultMap>
+
+    <sql id="columns">
+        id, order_id, total_amount, paid_amount, unpaid_amount,
+        payment_status, payment_count, create_time, update_time, remark
+    </sql>
+
+    <!-- 插入财务记录 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO guet_finance (order_id, total_amount, paid_amount, unpaid_amount, payment_status, payment_count)
+        VALUES (#{orderId}, #{totalAmount}, #{paidAmount}, #{unpaidAmount}, #{paymentStatus}, #{paymentCount})
+    </insert>
+
+    <!-- 根据ID查询 -->
+    <select id="selectById" resultMap="FinanceMap">
+        SELECT <include refid="columns"/> FROM guet_finance WHERE id = #{id}
+    </select>
+
+    <!-- 根据订单ID查询 -->
+    <select id="selectByOrderId" resultMap="FinanceMap">
+        SELECT <include refid="columns"/> FROM guet_finance WHERE order_id = #{orderId}
+    </select>
+
+    <!-- 更新财务记录 -->
+    <update id="update">
+        UPDATE guet_finance
+        <set>
+            <if test="paidAmount != null">paid_amount = #{paidAmount},</if>
+            <if test="unpaidAmount != null">unpaid_amount = #{unpaidAmount},</if>
+            <if test="paymentStatus != null">payment_status = #{paymentStatus},</if>
+            <if test="paymentCount != null">payment_count = #{paymentCount},</if>
+            update_time = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 查询运费结算列表（关联订单、客户、物流） -->
+    <select id="selectFinanceList" resultMap="FinanceVOMap">
+        SELECT f.*, o.order_num, o.order_name, o.user_id, o.order_shipping,
+        c.customer_name, u.name as user_name,
+        (SELECT MAX(gl.status) FROM guet_logistics gl WHERE gl.order_id = o.order_id) as logistics_status
+        FROM guet_finance f
+        LEFT JOIN guet_order o ON f.order_id = o.order_id
+        LEFT JOIN guet_customer c ON o.customer_id = c.customer_id
+        LEFT JOIN guet_user u ON o.user_id = u.id
+        <where>
+            <if test="userId != null">
+                AND o.user_id = #{userId}
+            </if>
+            <if test="paymentStatus != null">
+                AND f.payment_status = #{paymentStatus}
+            </if>
+        </where>
+        ORDER BY f.create_time DESC
+    </select>
+
+    <!-- 统计财务数据 -->
+    <select id="selectFinanceStatistics" resultType="java.util.HashMap">
+        SELECT
+        COUNT(*) as orderCount,
+        COALESCE(SUM(total_amount), 0) as totalAmount,
+        COALESCE(SUM(paid_amount), 0) as paidAmount,
+        COALESCE(SUM(unpaid_amount), 0) as unpaidAmount,
+        ROUND(COALESCE(SUM(paid_amount) / NULLIF(SUM(total_amount), 0) * 100, 0), 2) as paymentRate
+        FROM guet_finance f
+        LEFT JOIN guet_order o ON f.order_id = o.order_id
+        <where>
+            <if test="userId != null">
+                AND o.user_id = #{userId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

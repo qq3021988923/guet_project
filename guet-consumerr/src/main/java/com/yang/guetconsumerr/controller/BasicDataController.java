@@ -21,9 +21,6 @@ public class BasicDataController {
     private GuetUserService guetUserService;
 
 
-
-
-
     // http://localhost:8088/consumer/api/basic/byParentId/2
     @GetMapping("/byParentId/{parentId}")
     public Result<List<GuetBasicData>> getbyParentId(@PathVariable Integer parentId) {
@@ -84,5 +81,6 @@ public class BasicDataController {
         int i = basicDataService.delete(baseId);
         return Result.build(i, i == 0 ? 500 : 200, i == 0 ? "删除失败" : "删除成功");
     }
+
 
 }

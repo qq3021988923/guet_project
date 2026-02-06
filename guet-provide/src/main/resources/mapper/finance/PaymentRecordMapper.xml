@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yang.mapper.PaymentRecordMapper">
+
+    <resultMap id="PaymentRecordMap" type="com.yang.pojo.PaymentRecord" autoMapping="true">
+        <id property="id" column="id"/>
+        <result property="financeId" column="finance_id"/>
+        <result property="orderId" column="order_id"/>
+        <result property="paymentAmount" column="payment_amount"/>
+        <result property="paymentMethod" column="payment_method"/>
+        <result property="paymentTime" column="payment_time"/>
+        <result property="operatorId" column="operator_id"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="columns">
+        id, finance_id, order_id, payment_amount, payment_method,
+        payment_time, operator_id, create_time
+    </sql>
+
+    <!-- 插入收款记录 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO guet_payment_record (finance_id, order_id, payment_amount, payment_method, payment_time, operator_id, create_time)
+        VALUES (#{financeId}, #{orderId}, #{paymentAmount}, #{paymentMethod}, #{paymentTime}, #{operatorId}, #{createTime})
+    </insert>
+
+    <!-- 根据财务ID查询收款记录 -->
+    <select id="selectByFinanceId" resultMap="PaymentRecordMap">
+        SELECT <include refid="columns"/>
+        FROM guet_payment_record
+        WHERE finance_id = #{financeId}
+        ORDER BY payment_time DESC
+    </select>
+
+    <!-- 根据订单ID查询收款记录 -->
+    <select id="selectByOrderId" resultMap="PaymentRecordMap">
+        SELECT <include refid="columns"/>
+        FROM guet_payment_record
+        WHERE order_id = #{orderId}
+        ORDER BY payment_time DESC
+    </select>
+
+</mapper>
